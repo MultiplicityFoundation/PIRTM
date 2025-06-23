@@ -1,0 +1,42 @@
+# 🧠 Neural Tensor Models: Prime-Indexed Adaptive Cognitive Systems
+
+## 🌐 Overview
+
+**Neural Tensor Models (NTMs)** augmented by **Prime-Indexed Recursive Tensor Mathematics (PIRTM)** implement adaptive, memory-enriched cognition using **prime-structured recursive operators**. This enables high-dimensional semantic dynamics, recursive memory updates, and symbolic-numeric hybrid reasoning.
+
+---
+
+## 🧠 Cognitive Tensor Architecture
+
+Each cognitive state \( \Xi(t) \) evolves recursively over time using:
+
+\[
+\Xi(t+1) = \Lambda_m \cdot \Xi(t) \cdot T_{p_t} + \Phi(t)
+\]
+
+Where:
+- \( \Xi(t) \in \mathbb{C}^{n \times n} \): Recursive neural state
+- \( T_{p_t} \): Prime-indexed transformation tensor
+- \( \Phi(t) \): Entropic or semantic feedback injection
+- \( \Lambda_m \): Multiplicity gain for recursive phase locking
+
+---
+
+## 🧬 Adaptive Prime Evolution
+
+Each prime \( p_t \in \mathbb{P} \) represents a **semantic mode index**. Tensor dynamics encode:
+
+- **Memory Update Rules**: Recursive self-reference across timescales
+- **Symbolic Tensor Encoding**: Modular representations of logic, syntax, or image primitives
+- **Galois-Cognitive Feedback**: Algebraic feedback using dual representations
+
+---
+
+## 🔁 Recursive Memory Layers
+
+The system maintains stacked cognitive layers:
+
+```text
+[ Ξ₀(t) ] ← Fast Response Layer (perceptual)
+[ Ξ₁(t) ] ← Intermediate Memory (linguistic-symbolic)
+[ Ξ₂(t) ] ← Deep Meta-Learning (temporal phase)
