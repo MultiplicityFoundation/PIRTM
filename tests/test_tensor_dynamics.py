@@ -1,10 +1,9 @@
 # 📦 test_tensor_dynamics.py
 # Validation of Recursive Tensor Evolution in PIRTM
-Add commentMore actions
 import unittest
 import numpy as np
-from pir_tensor import PrimeTensorSystem
-from recursive_ops import recursive_update, contraction_check, is_stable
+from pirtm._legacy import PrimeTensorSystem
+from pirtm._legacy import recursive_update, contraction_check, is_stable
 
 class TestTensorDynamics(unittest.TestCase):
 

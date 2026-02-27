@@ -1,0 +1,22 @@
+name: Documentation
+description: Report docs gaps or inaccuracies
+title: "docs: "
+labels: [documentation]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: Document path
+      placeholder: e.g. docs/math_spec.md
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or missing?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested improvement
