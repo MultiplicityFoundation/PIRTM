@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a defect in PIRTM behavior
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is broken?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands/code to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: pirtm_version
+    attributes:
+      label: PIRTM version
+      placeholder: e.g. 0.1.0dev0
+  - type: input
+    id: python_version
+    attributes:
+      label: Python version
+  - type: input
+    id: numpy_version
+    attributes:
+      label: NumPy version
+  - type: input
+    id: os
+    attributes:
+      label: Operating system

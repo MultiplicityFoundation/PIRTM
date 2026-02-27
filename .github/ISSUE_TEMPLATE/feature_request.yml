@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a new PIRTM capability
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature summary
+      description: What capability should be added?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this needed?
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: Function/class signatures, module placement, examples
+  - type: textarea
+    id: math
+    attributes:
+      label: Mathematical specification
+      description: Equations/invariants if relevant
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

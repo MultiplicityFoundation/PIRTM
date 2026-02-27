@@ -4,7 +4,7 @@
 import unittest
 import numpy as np
 from sympy import isprime, primerange
-from pir_tensor import PrimeTensorSystem
+from pirtm._legacy import PrimeTensorSystem
 
 class TestPrimeTensorSystem(unittest.TestCase):
 
