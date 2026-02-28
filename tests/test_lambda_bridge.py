@@ -26,11 +26,14 @@ def test_batch_submit_dry_run_and_empty():
     bridge = LambdaTraceBridge(session_id="abc")
     empty = bridge.batch_submit()
     assert empty.status == "empty"
+    assert empty.poseidon_merkle_root == "0" * 64
 
     bridge.translate(_chain())
     receipt = bridge.batch_submit()
     assert receipt.status == "dry_run"
     assert receipt.events_submitted == 2
+    assert receipt.poseidon_merkle_root is not None
+    assert len(receipt.poseidon_merkle_root) == 64
     assert bridge.pending_count == 0
 
 
@@ -59,8 +62,11 @@ def test_batch_submit_calls_submit_fn_and_merkle_handles_odd():
     assert isinstance(called["payload"], list)
 
     merkle = LambdaTraceBridge._compute_merkle_root(["a" * 64, "b" * 64, "c" * 64])
+    poseidon_merkle = LambdaTraceBridge._compute_poseidon_merkle_root(["a" * 64, "b" * 64, "c" * 64])
     assert isinstance(merkle, str)
     assert len(merkle) == 64
+    assert isinstance(poseidon_merkle, str)
+    assert len(poseidon_merkle) == 64
 
     json.dumps(called["payload"], default=str)
 

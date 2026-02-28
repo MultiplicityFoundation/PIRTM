@@ -28,6 +28,7 @@ dependencies = [
 ]
 
 [project.scripts]
+pirtm = "pirtm.cli:main"
 pirtm-conformance = "pirtm.conformance:_cli_main"
 
 [project.optional-dependencies]

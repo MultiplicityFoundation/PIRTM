@@ -79,6 +79,7 @@ from .spectral_gov import SpectralReport, SpectralGovernor
 from .orchestrator import SessionDescriptor, AggregatedCertificate, SessionSnapshot, SessionOrchestrator
 from .lambda_bridge import LambdaTraceEvent, SubmissionReceipt, LambdaTraceBridge
 from .petc_bridge import PETCAllocation, PETCAllocator
+from .transpiler import TranspileResult, TranspileSpec, transpile
 
 __all__ = [
     "StepInfo",
@@ -177,4 +178,8 @@ __all__ = [
     "drmm_step",
     "drmm_evolve",
     "DRMMInferenceLoop",
+    # transpiler
+    "TranspileSpec",
+    "TranspileResult",
+    "transpile",
 ]

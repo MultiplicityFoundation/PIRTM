@@ -16,6 +16,13 @@
  python examples/full_pipeline.py
  ```
 
+ ## Transpiler Descriptor
+
+ Use this computation descriptor with the Phase 2.1 transpiler CLI examples:
+
+ - `examples/transpile_computation.json`
+ - `examples/transpile_two_layer_nn.json`
+
  ## Legacy Notebooks
 
  The legacy exploratory notebooks remain for reference:

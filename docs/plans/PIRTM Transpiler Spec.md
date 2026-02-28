@@ -141,28 +141,36 @@ The `verdict` follows Lambda-Proof's `ComplianceReport` trichotomy: if `certific
 
 **Process**:
 
-1. **Map to Contractive Form**: Express the user's computation as the PIRTM recurrence: \(X_{t+1} = \Xi_t X_t + \Lambda_t T(X_t) + G_t\). This requires:
-   - **\(\Xi_t\)**: The "memory" operator—how much of the current state persists. For gradient descent, this maps to `(1 - learning_rate)·I`.
-   - **\(\Lambda_t\)**: The "update" operator—how the transformation `T` contributes. For gradient descent, this maps to `learning_rate·I`.
-   - **\(T\)**: The "transform"—the user's actual computation. For ML, this is the gradient function.
-   - **\(G_t\)**: The "forcing"—external inputs, data batches, boundary conditions.
+1. **Validate Descriptor (fail-fast)**: The handler loads a JSON descriptor (merged with `TranspileSpec.metadata`) and validates mode-specific constraints before execution:
+   - Supported modes: `gradient_descent`, `adam`, `iterative_solver`, `two_layer_nn`
+   - Common checks: `steps >= 1`
+   - Gradient/Adam/2-layer checks: `0 < learning_rate < 1`
+   - Adam checks: `0 < beta1 < 1`, `0 < beta2 < 1`
+   - Iterative solver check: `0 < relaxation < 1`
+   - 2-layer check: dimensions must be positive and `dim` must match parameter count
 
-2. **Generate Weight Schedule**: Using `weights.py`, produce `WeightSchedule` with `Xi_seq`, `Lam_seq`, `q_targets`, and `primes_used`.
+2. **Map to Contractive Form**: The handler maps each mode to recurrence operators \(\Xi_t\), \(\Lambda_t\), \(T\), and \(G_t\):
+   - `gradient_descent`: \(\Xi_t = (1-\eta)I\), \(\Lambda_t = -\eta I\), \(T(x)=x-x^*\)
+   - `adam`: bias-corrected effective learning-rate schedule, with per-step \(\Xi_t\)/\(\Lambda_t\)
+   - `iterative_solver`: relaxation update with fixed-point target operator
+   - `two_layer_nn`: 2-layer parameter vector training abstraction with shape-aware dimension checks
 
-3. **Execute via QARISession**: Create a `QARISession` with the spec's parameters. Run `session.step()` for each iteration. The session automatically:
-   - Computes \(q_t\) and projects if needed (`recurrence.step()`)
-   - Applies emission gating (`gate.py`)
-   - Records telemetry (`StepInfo`)
-   - Appends to `AuditChain`
-   - Adjusts margin via `AdaptiveMargin` if adaptive mode is on
+3. **Generate Weight Schedule Diagnostics**: In parallel with execution mapping, the handler synthesizes and validates a `WeightSchedule` (`Xi_seq`, `Lam_seq`, `q_targets`, `primes_used`) using `weights.py`. These diagnostics are exported to witness/audit fields (`weightScheduleProfile`, `weightScheduleValid`, `weightScheduleMaxQ`, `weightSchedulePrimeCount`, `weightScheduleQTarget`).
 
-4. **Certify**: Call `session.certify()` to produce the `Certificate`.
+4. **Execute via QARISession**: The handler runs `session.step()` for each iteration with descriptor-configured behavior. The adaptive margin controller is now descriptor-overridable (`adaptive`: true/false), and that choice is persisted in audit/witness metadata.
 
-5. **PETC Indexing**: At each prime-indexed step (steps whose index is prime), append a `PETCEntry` to the ledger. This creates a sparse but cryptographically verifiable index over the computation trajectory.
+5. **Certify + PETC Indexing**: The handler calls `session.certify()` and appends PETC entries at prime-indexed steps (`2, 3, 5, ...`) using state hashes for sparse trajectory integrity.
 
-6. **Output**: Full trajectory `[Ξ(0), ..., Ξ(T)]`, certificate, PETC report, audit chain.
+6. **Witness + Provenance Export**: The witness now binds to the true initial computation state and includes descriptor/schedule diagnostics:
+   - Core: `stateHash`, `newStateHash`, `trajectoryLength`, `qMax`, `residualFinal`
+   - Provenance: `descriptorHash`, `adaptiveEnabled`, `lambdaEventCount`
+   - Schedule: `weightSchedule*` fields
+   - Training diagnostics: `lossInitial`, `lossFinal`, `lossDelta`
+   - Mode extras: e.g., Adam (`beta1`, `beta2`, `effectiveLrMin/Max`) and 2-layer NN (`modelShape`, `parameterCount`)
 
-**What "transpile my ML training into PIRTM" means concretely**: The user provides their loss function and data. The transpiler wraps it in the contractive recurrence with appropriate \(\Xi_t\), \(\Lambda_t\) decomposition. The existing PIRTM runtime executes it with all safety guarantees enforced. The user gets their trained model *plus* a `Certificate` proving every update was contractive, a `PETCReport` proving prime-indexed integrity, and an `AuditChain` proving the full history is tamper-evident.
+7. **Output**: Full trajectory `[Ξ(0), ..., Ξ(T)]`, certificate, PETC report, audit chain export, lambda events, and enriched witness JSON.
+
+**What "transpile my ML training into PIRTM" means concretely (current implementation)**: the computation descriptor is validated, converted to a contractive recurrence profile, executed under `QARISession` safety gates, certified, indexed on prime steps, and exported with deterministic provenance diagnostics suitable for downstream verification.
 
 ### Handler 3: Workflows (Chained PETC Entries)
 
@@ -170,27 +178,34 @@ The `verdict` follows Lambda-Proof's `ComplianceReport` trichotomy: if `certific
 
 **Process**:
 
-1. **Decompose Workflow**: Parse the workflow descriptor into an ordered list of steps. Each step has:
-   - A `TranspileSpec` of its own (data_asset or computation)
-   - Dependencies (which prior steps must complete)
-   - A prime index assignment (primes assigned in topological order)
+1. **Descriptor Schema (implemented)**: Workflow input is a JSON object loaded from `input_ref` (or merged from `metadata`) with:
+   - `steps`: required non-empty list
+   - Each step requires `id`, `mode`, `steps` and may include mode-specific fields, `dependencies`, optional `prime_index`, and per-step overrides (`dim`, `epsilon`, `op_norm_T`, `emission_policy`, `adaptive`)
+   - Optional top-level `dependencies` map is supported and merged with per-step dependency lists
 
-2. **Execute via SessionOrchestrator**: Register each step as a separate `QARISession` under the `SessionOrchestrator`. The orchestrator manages:
-   - Sequential execution respecting dependencies
-   - Per-step certificates via `session.certify()`
-   - Cross-step audit via `master_audit`
+2. **Dependency Ordering + Rejection**: The handler builds a DAG and performs topological ordering before execution.
+   - Unknown dependency targets are rejected
+   - Duplicate or empty step IDs are rejected
+   - Cycles are rejected with an explicit `ValueError` (fail-fast)
 
-3. **Aggregate Certification**: Call `orchestrator.aggregate_certificates()` to produce an `AggregatedCertificate`. This proves:
-   - `all_certified`: every step individually passed
-   - `q_max_global`: the worst contraction factor across all steps
-   - `margin_min`: the tightest margin across all steps
-   - `aggregate_hash`: SHA-256 of all individual certificate hashes
+3. **Execute via SessionOrchestrator**: Each ordered step is registered as a `QARISession` and executed using the computation-mode mapper (`gradient_descent`, `adam`, `iterative_solver`, `two_layer_nn`).
+   - Per-step certificate is produced via `session.certify()`
+   - `master_audit` receives workflow descriptor and per-step completion payloads
+   - Session lifecycle is finalized with `orchestrator.complete(step_id)`
 
-4. **PETC Chain**: The workflow's PETC ledger chains entries across steps. Step 1 uses primes `[2, 3]`, Step 2 uses `[5, 7]`, Step 3 uses `[11, 13]`, etc. The monotonicity requirement guarantees ordering.
+4. **Aggregate Certification**: `orchestrator.aggregate_certificates(session_ids=...)` produces aggregate integrity data (`all_certified`, `q_max_global`, `margin_min`, `aggregate_hash`). The transpiler emits this as the workflow-level certificate payload.
 
-5. **Lambda Bridge**: Call `LambdaTraceBridge.translate(orchestrator.master_audit)` to produce the event stream, then `batch_submit()` for the Merkle root.
+5. **Workflow PETC Chain**: A workflow-level `PETCLedger` is populated with one entry per executed step using prime assignments (step override or deterministic fallback). Short workflows are padded to satisfy ledger minimum-length invariants while preserving prime monotonicity.
 
-6. **Output**: Per-step results + aggregated certificate + unified audit chain + Lambda-Proof event stream.
+6. **Lambda Bridge + Witness Fields**: `LambdaTraceBridge.translate(orchestrator.master_audit)` produces event payloads and `batch_submit()` returns Merkle receipts. Workflow witness export includes:
+   - `workflowStepCount`
+   - `workflowDescriptorHash`
+   - `workflowAggregateHash`
+   - `workflowSessionIds`
+   - `petcPrimeSequence`
+   - `lambdaEventCount`
+
+7. **Output**: Combined trajectory, aggregate certificate, workflow PETC report, unified master audit export, lambda events, and workflow witness JSON with provenance diagnostics.
 
 ***
 
@@ -251,6 +266,24 @@ The `witness.py` module is the **exit ramp** from PIRTM's Python world to Lambda
 
 And produces a JSON blob compatible with both `root.circom` (existing) and the proposed `contraction.circom` (for PIRTM v2.9 Lipschitz verification).
 
+Current implementation supports selectable hash export modes:
+
+- `hashScheme="sha256"`: SHA-only witness keys (`stateHash`, `newStateHash`, `merkleRoot`)
+- `hashScheme="poseidon_compat"`: Poseidon-compatible primary keys (`stateHash`, `newStateHash`, `merkleRoot`)
+- `hashScheme="dual"` (or `dual_hash=True`): emits both sets with explicit keys:
+   - `stateHashSha256`, `newStateHashSha256`, `prevStateHashSha256`
+   - `stateHashPoseidon`, `newStateHashPoseidon`, `prevStateHashPoseidon`
+   - `merkleRootSha256`, `merkleRootPoseidon`
+   - `hashSchemes=["sha256","poseidon_compat"]`
+
+Witness schema by hash mode:
+
+| Hash mode | Exact output keys |
+| --- | --- |
+| `sha256` | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot` |
+| `poseidon_compat` | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot` |
+| `dual` (or `--dual-hash`) | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot`, `stateHashSha256`, `prevStateHashSha256`, `newStateHashSha256`, `stateHashPoseidon`, `prevStateHashPoseidon`, `newStateHashPoseidon`, `merkleRootSha256`, `merkleRootPoseidon`, `hashSchemes` |
+
 The critical hash migration: `AuditChain` currently uses SHA-256 internally, and `LambdaTraceBridge._compute_merkle_root()` uses SHA-256. The witness module must recompute commitments under Poseidon for circuit compatibility, while preserving SHA-256 for the Python-side audit trail. This dual-hash approach was identified in the previous session's analysis.
 
 ***
@@ -263,23 +296,15 @@ pirtm transpile \
   --type computation \
   --prime-index 7919 \
   --identity-commitment 0xabc123... \
+   --hash-scheme dual \
+   --dual-hash \
   --epsilon 0.05 \
   --emit-witness \
   --emit-lambda-events \
   --output result.json
 ```
 
-The CLI wraps `conformance._cli_main()`'s pattern but routes through the transpiler instead of the core profile checker.
-
-***
-
-## Precision Questions
-
-Before implementation, two questions shape the minimal viable transpiler:
-
-> **1. Should the prime channel assignment be deterministic (hash-based) or user-specified?** Deterministic assignment (content hash mod prime sieve) ensures reproducibility but removes user control. User-specified assignment (via `TranspileSpec.metadata["prime_map"]`) gives flexibility but adds spec complexity.
-
-> **2. Should `witness.py` emit both SHA-256 and Poseidon commitments, or should the PIRTM `AuditChain` migrate entirely to Poseidon?** Migrating `AuditChain` to Poseidon simplifies the witness but breaks the existing SHA-256 audit trail. Dual emission preserves compatibility but doubles hash computation.
+The CLI wraps `conformance._cli_main()`'s pattern but routes through the transpiler instead of the core profile checker. `--hash-scheme` accepts `sha256`, `poseidon_compat`, or `dual`, and `--dual-hash` forces both hash families to be emitted.
 
 ***
 
