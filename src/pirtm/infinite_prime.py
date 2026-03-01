@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -21,7 +21,7 @@ def _is_prime(value: int) -> bool:
     return True
 
 
-def infinite_prime_check(primes: Iterable[int], min_density: float = 0.05) -> dict:
+def infinite_prime_check(primes: Iterable[int], min_density: float = 0.05) -> dict[str, Any]:
     """Return a coverage diagnostic for the observed prime indices."""
 
     primes_list = sorted(set(int(p) for p in primes if _is_prime(int(p))))

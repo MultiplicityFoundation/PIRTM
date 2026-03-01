@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 
 if TYPE_CHECKING:
+    from pirtm.ace.types import AceCertificate
     from pirtm.types import Certificate, StepInfo
 
     from .spec import TranspileSpec
@@ -38,7 +39,7 @@ def build_witness(
     spec: TranspileSpec,
     xi_initial: np.ndarray,
     final_state: np.ndarray,
-    certificate: Certificate,
+    certificate: AceCertificate | Certificate,
     merkle_root: str,
     session_id: str,
     *,
@@ -48,7 +49,7 @@ def build_witness(
     emitted_count: int | None = None,
     poseidon_merkle_root: str | None = None,
     extra_fields: dict[str, Any] | None = None,
-) -> dict:
+) -> dict[str, Any]:
     prev_hash = _state_hash(xi_initial)
     new_hash = _state_hash(final_state)
     prev_poseidon_hash = _poseidon_state_hash(xi_initial)

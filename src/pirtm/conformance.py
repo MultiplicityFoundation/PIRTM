@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -21,12 +21,8 @@ if TYPE_CHECKING:
 class ConformanceResult:
     profile: str
     pirtm_version: str = "0.1.0dev0"
-    checks: list[dict[str, Any]] | None = None
+    checks: list[dict[str, Any]] = field(default_factory=list)
     passed: bool = True
-
-    def __post_init__(self) -> None:
-        if self.checks is None:
-            self.checks = []
 
     def record(self, name: str, passed: bool, detail: str = "") -> None:
         self.checks.append({"name": name, "passed": passed, "detail": detail})
@@ -138,10 +134,10 @@ def _cli_main() -> None:
     Lam_seq = [0.2 * np.eye(dim)] * n_steps
     G_seq = [np.zeros(dim)] * n_steps
 
-    def T(x):
+    def T(x: np.ndarray) -> np.ndarray:
         return 0.8 * x
 
-    def P(x):
+    def P(x: np.ndarray) -> np.ndarray:
         return x
 
     results: list[ConformanceResult] = []

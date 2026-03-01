@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import numpy as np
 
+    from pirtm.ace.types import AceCertificate
     from pirtm.conformance import ConformanceResult
     from pirtm.types import Certificate, PETCReport
 
@@ -17,11 +18,11 @@ class TranspileResult:
     spec: TranspileSpec
     xi_initial: np.ndarray
     trajectory: list[np.ndarray]
-    certificate: Certificate
+    certificate: AceCertificate | Certificate
     petc_report: PETCReport
-    audit_export: list[dict]
-    lambda_events: list[dict]
-    witness_json: dict
+    audit_export: list[dict[str, object]]
+    lambda_events: list[dict[str, object]]
+    witness_json: dict[str, object]
     compliance: ConformanceResult
     merkle_root: str
     verdict: str

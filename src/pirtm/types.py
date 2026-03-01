@@ -40,7 +40,7 @@ class Certificate:
     certified: bool
     margin: float
     tail_bound: float
-    details: dict = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(slots=True)

@@ -3,9 +3,11 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from .ace.types import AceCertificate
     from .types import Certificate, StepInfo
 
@@ -21,7 +23,7 @@ class AuditEvent:
 class AuditChain:
     GENESIS_HASH = "0" * 64
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._events: list[AuditEvent] = []
         self._head: str = self.GENESIS_HASH
 
@@ -58,10 +60,10 @@ class AuditChain:
         }
         return self._append(payload)
 
-    def append_payload(self, payload: dict) -> AuditEvent:
+    def append_payload(self, payload: dict[str, Any]) -> AuditEvent:
         return self._append(payload)
 
-    def _append(self, payload: dict) -> AuditEvent:
+    def _append(self, payload: dict[str, Any]) -> AuditEvent:
         canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
         event_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
         chain_hash = hashlib.sha256((self._head + event_hash).encode("utf-8")).hexdigest()
@@ -90,7 +92,7 @@ class AuditChain:
             head = event.chain_hash
         return True
 
-    def export(self) -> list[dict]:
+    def export(self) -> list[dict[str, Any]]:
         return [asdict(event) for event in self._events]
 
     @property
@@ -101,7 +103,7 @@ class AuditChain:
     def length(self) -> int:
         return len(self._events)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AuditEvent]:
         return iter(self._events)
 
     def __len__(self) -> int:

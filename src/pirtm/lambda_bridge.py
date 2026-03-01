@@ -4,7 +4,7 @@ import hashlib
 import json
 import time
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -18,7 +18,7 @@ class LambdaTraceEvent:
     event_type: str
     sequence: int
     chain_hash: str
-    payload: dict
+    payload: dict[str, Any]
     capability_token: str
     timestamp: float
     source: str
@@ -44,7 +44,7 @@ class LambdaTraceBridge:
         self,
         session_id: str,
         capability_token: str = "",
-        submit_fn: Callable[[list[dict]], SubmissionReceipt] | None = None,
+        submit_fn: Callable[[list[dict[str, Any]]], SubmissionReceipt] | None = None,
     ):
         self.session_id = session_id
         self.capability_token = capability_token

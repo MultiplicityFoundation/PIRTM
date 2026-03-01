@@ -27,9 +27,10 @@ class AdaptiveMargin:
 
         target = 1.0 - self.epsilon
         margin = target - info.q
+        baseline = self.baseline if self.baseline is not None else self.min_epsilon
         if info.q > target:
             self.epsilon = min(self.max_epsilon, self.epsilon + self.step_size)
         elif info.residual < self.residual_target and margin > 0.05:
             proposed = self.epsilon - self.step_size
-            self.epsilon = max(self.min_epsilon, self.baseline, proposed)
+            self.epsilon = max(self.min_epsilon, baseline, proposed)
         return self.epsilon

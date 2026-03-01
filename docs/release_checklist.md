@@ -57,7 +57,7 @@ This matrix defines which checks are required for a release-candidate commit on 
 ## Build and Integrity
 
 - [ ] Build: `python -m build`
-- [ ] Check artifacts: `python -m twine check dist/*`
+- [ ] Check artifacts: `python -m twine check dist/*.whl dist/*.tar.gz`
 - [ ] Generate SBOM: `make sbom`
 - [ ] (Optional) Sign artifacts: `make sign`
 - [ ] (Optional) Verify signatures: `make verify`

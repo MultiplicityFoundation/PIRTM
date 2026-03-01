@@ -5,7 +5,7 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -20,7 +20,7 @@ class TelemetryEvent:
     timestamp: float
     event_type: str
     step_index: int
-    payload: dict
+    payload: dict[str, Any]
     source: str = "pirtm"
     version: str = "0.2.0"
 
@@ -142,7 +142,7 @@ class TelemetryBus:
         )
         self._dispatch(event)
 
-    def emit_alert(self, name: str, detail: dict) -> None:
+    def emit_alert(self, name: str, detail: dict[str, Any]) -> None:
         event = TelemetryEvent(
             timestamp=time.time(),
             event_type="alert",

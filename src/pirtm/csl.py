@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -16,7 +16,7 @@ class SilenceEvent:
     step: int
     reason: str
     operator_failed: list[str]
-    detail: dict
+    detail: dict[str, Any]
 
 
 @dataclass(frozen=True)
@@ -26,14 +26,14 @@ class CSLVerdict:
     silence_triggered: bool
     commutes: bool
     violations: list[str]
-    detail: dict
+    detail: dict[str, Any]
 
 
 def neutrality_check(
     T: Callable[[np.ndarray], np.ndarray],
     subjects: Sequence[np.ndarray],
     epsilon_n: float = 1e-6,
-) -> tuple[bool, dict]:
+) -> tuple[bool, dict[str, Any]]:
     if len(subjects) < 2:
         return True, {"pairs_checked": 0, "max_deviation": 0.0, "violations": []}
 
@@ -63,7 +63,7 @@ def beneficence_check(
     norm_growth_limit: float = 1.0,
     residual_limit: float = 10.0,
     custom_checks: Sequence[Callable[[np.ndarray, np.ndarray, StepInfo], bool]] | None = None,
-) -> tuple[bool, dict]:
+) -> tuple[bool, dict[str, Any]]:
     violations: list[str] = []
     norm_t = float(np.linalg.norm(X_t))
     norm_next = float(np.linalg.norm(X_next))
@@ -90,7 +90,7 @@ def silence_clause(
     neutrality_ok: bool,
     beneficence_ok: bool,
     step_index: int,
-    detail: dict,
+    detail: dict[str, Any],
 ) -> tuple[bool, SilenceEvent | None]:
     if neutrality_ok and beneficence_ok:
         return False, None
@@ -115,7 +115,7 @@ def commutation_check(
     csl_filter: Callable[[np.ndarray], np.ndarray],
     X: np.ndarray,
     epsilon_c: float = 1e-6,
-) -> tuple[bool, dict]:
+) -> tuple[bool, dict[str, Any]]:
     path1 = np.asarray(csl_filter(T(X)), dtype=float)
     path2 = np.asarray(T(csl_filter(X)), dtype=float)
     deviation = float(np.linalg.norm(path1 - path2))

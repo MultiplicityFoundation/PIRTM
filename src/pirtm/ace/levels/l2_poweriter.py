@@ -33,14 +33,14 @@ def certify_l2(
         with assert_matrix_not_mutated(matrix, "L2"):
             n = matrix.shape[0]
             rng = np.random.default_rng(seed=42)
-            vector = rng.standard_normal(n)
-            vector = vector / (np.linalg.norm(vector) + 1e-12)
+            vector = np.asarray(rng.standard_normal(size=(n,)), dtype=float)
+            vector = np.asarray(vector / (np.linalg.norm(vector) + 1e-12), dtype=float)
             rho_prev = 0.0
             iterations_used = max_iter
             for index in range(max_iter):
                 product = matrix @ vector
                 rho = float(np.linalg.norm(product))
-                vector = product / (rho + 1e-12)
+                vector = np.asarray(product / (rho + 1e-12), dtype=float)
                 if abs(rho - rho_prev) < tol:
                     iterations_used = index + 1
                     break

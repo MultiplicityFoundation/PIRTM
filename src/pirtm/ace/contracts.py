@@ -6,6 +6,8 @@ from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     import numpy as np
 
 _DEBUG = os.environ.get("PIRTM_ACE_DEBUG", "0") == "1"
@@ -18,7 +20,7 @@ def _matrix_fingerprint(matrix: np.ndarray | None) -> str | None:
 
 
 @contextmanager
-def assert_matrix_not_mutated(matrix: np.ndarray | None, level_name: str):
+def assert_matrix_not_mutated(matrix: np.ndarray | None, level_name: str) -> Iterator[None]:
     if not _DEBUG or matrix is None:
         yield
         return

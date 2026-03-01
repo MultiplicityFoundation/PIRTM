@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .adaptive import AdaptiveMargin
 from .audit import AuditChain
@@ -118,7 +118,7 @@ class QARISession:
     def infos(self) -> list[StepInfo]:
         return list(self._infos)
 
-    def summary(self) -> dict:
+    def summary(self) -> dict[str, Any]:
         if not self._infos:
             return {"steps": 0}
         qs = [entry.q for entry in self._infos]

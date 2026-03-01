@@ -14,7 +14,7 @@ class AceWitness:
     certificate: AceCertificate
     prime_index: int
 
-    def export(self) -> dict:
+    def export(self) -> dict[str, object]:
         payload = asdict(self.certificate)
         payload["level"] = self.certificate.level.value
         return {

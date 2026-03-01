@@ -4,13 +4,13 @@ import hashlib
 import json
 import time
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .audit import AuditChain
 from .qari import QARIConfig, QARISession
 
 if TYPE_CHECKING:
-    from .types import Certificate
+    from .ace.types import AceCertificate
 
 
 @dataclass(frozen=True)
@@ -24,7 +24,7 @@ class SessionDescriptor:
 @dataclass(frozen=True)
 class AggregatedCertificate:
     session_ids: list[str]
-    individual_certs: list[Certificate]
+    individual_certs: list[AceCertificate]
     all_certified: bool
     q_max_global: float
     margin_min: float
@@ -34,21 +34,21 @@ class AggregatedCertificate:
 @dataclass
 class SessionSnapshot:
     session_id: str
-    config_dict: dict
+    config_dict: dict[str, Any]
     step_count: int
-    infos: list[dict]
+    infos: list[dict[str, Any]]
     epsilon: float
-    audit_events: list[dict]
+    audit_events: list[dict[str, Any]]
     snapshot_time: float
 
 
 class SessionOrchestrator:
-    def __init__(self):
+    def __init__(self) -> None:
         self._sessions: dict[str, QARISession] = {}
         self._descriptors: dict[str, SessionDescriptor] = {}
         self._master_audit = AuditChain()
 
-    def register(self, session_id: str, config: QARIConfig, **session_kwargs) -> QARISession:
+    def register(self, session_id: str, config: QARIConfig, **session_kwargs: Any) -> QARISession:
         if session_id in self._sessions:
             raise ValueError(f"Session '{session_id}' already registered")
 
@@ -85,7 +85,7 @@ class SessionOrchestrator:
                 if desc.status in ("active", "completed")
             ]
 
-        certs: list[Certificate] = []
+        certs: list[AceCertificate] = []
         for session_id in session_ids:
             if session_id not in self._sessions:
                 raise KeyError(f"Session '{session_id}' not found")
@@ -155,7 +155,7 @@ class SessionOrchestrator:
             status="completed",
         )
 
-    def global_summary(self) -> dict:
+    def global_summary(self) -> dict[str, Any]:
         per_session = {sid: session.summary() for sid, session in self._sessions.items()}
         total_steps = sum(summary.get("steps", 0) for summary in per_session.values())
         total_projections = sum(

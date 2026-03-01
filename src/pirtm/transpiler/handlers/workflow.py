@@ -23,6 +23,8 @@ from ..witness import build_witness
 from .computation import _build_computation_mapping, _is_prime, _validate_descriptor, _vector
 
 if TYPE_CHECKING:
+    from pirtm.ace.types import AceCertificate
+
     from ..spec import TranspileSpec
 
 
@@ -147,7 +149,7 @@ def transpile_workflow(spec: TranspileSpec) -> TranspileResult:
 
     trajectory: list[np.ndarray] = []
     all_infos = []
-    step_certs: list[Certificate] = []
+    step_certs: list[AceCertificate] = []
     session_ids: list[str] = []
 
     for index, step in enumerate(ordered_steps):

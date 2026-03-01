@@ -21,7 +21,7 @@ def _resolve_alphas(primes: Sequence[int], profile: WeightProfile) -> np.ndarray
 
     if profile == "harmonic":
         values = np.array([1.0 / index for index in range(1, count + 1)], dtype=float)
-        return np.clip(values, 0.0, 1.0)
+        return np.asarray(np.clip(values, 0.0, 1.0), dtype=float)
 
     if profile == "log_decay":
         raw = np.array(
@@ -32,13 +32,13 @@ def _resolve_alphas(primes: Sequence[int], profile: WeightProfile) -> np.ndarray
         if maximum - minimum < 1e-12:
             return np.full(count, 0.5, dtype=float)
         normalized = (raw - minimum) / (maximum - minimum)
-        return np.clip(normalized, 0.0, 1.0)
+        return np.asarray(np.clip(normalized, 0.0, 1.0), dtype=float)
 
     values = np.array(
         [float(profile(index, int(prime))) for index, prime in enumerate(primes, start=1)],
         dtype=float,
     )
-    return np.clip(values, 0.0, 1.0)
+    return np.asarray(np.clip(values, 0.0, 1.0), dtype=float)
 
 
 def synthesize_weights(

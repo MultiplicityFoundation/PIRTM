@@ -27,7 +27,7 @@ The project is currently on a development version. A tagged stable release is re
 
 - [ ] Execute `docs/release_checklist.md` top to bottom.
 - [ ] Run `python scripts/bump_version.py` with chosen increment (`release` mode now supported for prerelease finalization).
-- [x] Run `python -m build` and `python -m twine check dist/*` (enforced in `release.yml`).
+- [x] Run `python -m build` and `python -m twine check dist/*.whl dist/*.tar.gz` (enforced in `release.yml`).
 - [x] Run optional integrity steps (`make sbom`, signing/verify if used) (tracked as optional in checklist).
 - [ ] Create/push tag and confirm `release.yml` pass.
 - [ ] Record release evidence (workflow URL + tag + artifact checksums).

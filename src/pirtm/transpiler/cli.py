@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from .spec import TranspileSpec
 
@@ -10,7 +10,10 @@ if TYPE_CHECKING:
 
 
 def add_transpile_parser(subparsers: Any) -> argparse.ArgumentParser:
-    parser = subparsers.add_parser("transpile", help="Transpile into PIRTM runtime artifacts")
+    parser = cast(
+        "argparse.ArgumentParser",
+        subparsers.add_parser("transpile", help="Transpile into PIRTM runtime artifacts"),
+    )
     parser.add_argument("--type", dest="input_type", required=True)
     parser.add_argument("--input", dest="input_ref", required=True)
     parser.add_argument("--prime-index", type=int, required=True)
@@ -62,8 +65,12 @@ def build_spec(args: argparse.Namespace, parser: argparse.ArgumentParser) -> Tra
     metadata["hash_scheme"] = str(args.hash_scheme)
     metadata["dual_hash"] = bool(args.dual_hash)
 
+    input_type = str(args.input_type)
+    if input_type not in {"data_asset", "computation", "workflow"}:
+        parser.error("--type must be one of: data_asset, computation, workflow")
+
     return TranspileSpec(
-        input_type=str(args.input_type),
+        input_type=cast("Literal['data_asset', 'computation', 'workflow']", input_type),
         input_ref=str(args.input_ref),
         prime_index=int(args.prime_index),
         identity_commitment=str(args.identity_commitment),

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -27,7 +27,7 @@ def drmm_step(
     if G is None:
         G = np.zeros_like(X)
 
-    def P(x):
+    def P(x: np.ndarray) -> np.ndarray:
         return x
 
     if op_norm_T is None:
@@ -46,12 +46,12 @@ def drmm_evolve(
     epsilon: float = 0.05,
     op_norm_T: float | None = None,
     certify: bool = True,
-) -> dict:
+) -> dict[str, Any]:
     n_steps = len(Xi_sequence)
     if G_sequence is None:
         G_sequence = [np.zeros_like(X0)] * n_steps
 
-    def P(x):
+    def P(x: np.ndarray) -> np.ndarray:
         return x
 
     if op_norm_T is None:
@@ -68,7 +68,7 @@ def drmm_evolve(
         op_norm_T=op_norm_T,
     )
 
-    result = {
+    result: dict[str, Any] = {
         "X_final": X_final,
         "history": history,
         "infos": infos,

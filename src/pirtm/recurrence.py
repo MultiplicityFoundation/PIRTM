@@ -19,9 +19,9 @@ def _operator_norm(A: np.ndarray) -> float:
 
 def _apply_projector(P: Projector | object, X: np.ndarray) -> np.ndarray:
     if callable(P):
-        return P(X)
+        return np.asarray(P(X), dtype=float)
     if hasattr(P, "apply"):
-        return P.apply(X)
+        return np.asarray(P.apply(X), dtype=float)
     raise TypeError("P must be callable or expose an 'apply' method")
 
 

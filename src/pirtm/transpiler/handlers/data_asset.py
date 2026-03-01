@@ -98,10 +98,10 @@ def transpile_data_asset(spec: TranspileSpec) -> TranspileResult:
     Lam = 0.25 * np.eye(spec.dim)
     G = np.zeros(spec.dim)
 
-    def T(x):
+    def T(x: np.ndarray) -> np.ndarray:
         return 0.5 * x
 
-    def P(x):
+    def P(x: np.ndarray) -> np.ndarray:
         return x
 
     emitted_flags: list[bool] = []

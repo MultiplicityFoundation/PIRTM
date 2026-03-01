@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from collections import deque
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 from .types import MonitorRecord, Status, StepInfo
 
@@ -16,7 +20,7 @@ class Monitor:
         self.records.append(record)
         return record
 
-    def summary(self) -> dict:
+    def summary(self) -> dict[str, Any]:
         if not self.records:
             return {"steps": 0, "max_q": 0.0, "converged": False}
         steps = len(self.records)
@@ -24,7 +28,7 @@ class Monitor:
         converged = bool(self.records[-1].status and self.records[-1].status.converged)
         return {"steps": steps, "max_q": max_q, "converged": converged}
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[MonitorRecord]:
         return iter(self.records)
 
     def last(self) -> MonitorRecord | None:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -20,7 +20,7 @@ class SpectralReport:
     contraction_feasible: bool
     recommended_epsilon: float
     eigenvalues: np.ndarray
-    detail: dict
+    detail: dict[str, Any]
 
 
 class SpectralGovernor:
@@ -91,7 +91,7 @@ class SpectralGovernor:
         report = self.analyze(T)
         return report.recommended_epsilon, report.op_norm_estimate, report
 
-    def trend(self) -> dict:
+    def trend(self) -> dict[str, Any]:
         if not self._history:
             return {"reports": 0}
 

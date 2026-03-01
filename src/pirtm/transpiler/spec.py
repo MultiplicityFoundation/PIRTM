@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 from pirtm.gate import EmissionPolicy
 from pirtm.petc import _is_prime
@@ -18,7 +18,7 @@ class TranspileSpec:
     epsilon: float = 0.05
     max_steps: int = 1000
     emission_policy: str = "suppress"
-    metadata: dict = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     dim: int = 8
     op_norm_T: float = 0.5
 

@@ -6,7 +6,7 @@ import time
 from collections.abc import Callable
 from dataclasses import asdict
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 
@@ -15,7 +15,7 @@ from pirtm.gate import EmissionPolicy
 from pirtm.lambda_bridge import LambdaTraceBridge
 from pirtm.petc import PETCLedger
 from pirtm.qari import QARIConfig, QARISession
-from pirtm.weights import synthesize_weights, validate_schedule
+from pirtm.weights import WeightProfile, synthesize_weights, validate_schedule
 
 from ..identity import bind_identity
 from ..models import TranspileResult
@@ -49,7 +49,7 @@ def _emission_policy(value: str) -> EmissionPolicy:
     raise ValueError(f"unsupported emission policy: {value}")
 
 
-def _descriptor(spec: TranspileSpec) -> dict:
+def _descriptor(spec: TranspileSpec) -> dict[str, Any]:
     path = Path(spec.input_ref)
     if path.exists() and path.suffix.lower() == ".json":
         parsed = json.loads(path.read_text(encoding="utf-8"))
@@ -143,8 +143,8 @@ def _build_computation_mapping(
         Lam_seq = [(-lam_scale) * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
 
-        def T(x):
-            return x - target_state
+        def T(x: np.ndarray) -> np.ndarray:
+            return np.asarray(x - target_state, dtype=float)
 
         extras = {
             "mode": mode,
@@ -161,8 +161,8 @@ def _build_computation_mapping(
         optimizer_eps = float(config.get("optimizer_epsilon", 1e-8))
         max_effective_lr = float(config.get("max_effective_lr", 0.45))
 
-        Xi_seq: list[np.ndarray] = []
-        Lam_seq: list[np.ndarray] = []
+        Xi_seq = []
+        Lam_seq = []
         G_seq = [forcing.copy() for _ in range(step_count)]
         effective_lrs: list[float] = []
         for t in range(1, step_count + 1):
@@ -174,8 +174,8 @@ def _build_computation_mapping(
             Xi_seq.append((1.0 - lr_t) * np.eye(dim))
             Lam_seq.append((-lr_t) * np.eye(dim))
 
-        def T(x):
-            return x - target_state
+        def T(x: np.ndarray) -> np.ndarray:
+            return np.asarray(x - target_state, dtype=float)
 
         extras = {
             "mode": mode,
@@ -198,8 +198,8 @@ def _build_computation_mapping(
         Lam_seq = [relaxation * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
 
-        def T(x):
-            return target_state
+        def T(x: np.ndarray) -> np.ndarray:
+            return np.asarray(target_state, dtype=float)
 
         extras = {
             "mode": mode,
@@ -237,8 +237,8 @@ def _build_computation_mapping(
         Lam_seq = [(-lam_scale) * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
 
-        def T(x):
-            return x - target_state
+        def T(x: np.ndarray) -> np.ndarray:
+            return np.asarray(x - target_state, dtype=float)
 
         extras = {
             "mode": mode,
@@ -270,7 +270,10 @@ def transpile_computation(spec: TranspileSpec) -> TranspileResult:
         config, spec.dim, step_count
     )
 
-    schedule_profile = str(config.get("weight_profile", "log_decay"))
+    schedule_profile_raw = str(config.get("weight_profile", "log_decay"))
+    if schedule_profile_raw not in {"uniform", "log_decay", "harmonic"}:
+        raise ValueError("weight_profile must be one of: uniform, log_decay, harmonic")
+    schedule_profile = cast("WeightProfile", schedule_profile_raw)
     q_star = float(config.get("q_star", max(0.1, 1.0 - (spec.epsilon * 0.5))))
     schedule_primes = _first_n_primes(step_count)
     weight_schedule = synthesize_weights(
@@ -286,7 +289,7 @@ def transpile_computation(spec: TranspileSpec) -> TranspileResult:
     learning_rate = float(config.get("learning_rate", 0.2))
     adaptive_enabled = bool(config.get("adaptive", True))
 
-    def P(x):
+    def P(x: np.ndarray) -> np.ndarray:
         return x
 
     session = QARISession(

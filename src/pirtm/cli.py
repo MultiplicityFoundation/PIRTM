@@ -14,7 +14,7 @@ from .transpiler.cli import add_transpile_parser, build_spec
 def _to_jsonable(value: Any) -> Any:
     if isinstance(value, np.ndarray):
         return value.tolist()
-    if is_dataclass(value):
+    if is_dataclass(value) and not isinstance(value, type):
         return {key: _to_jsonable(item) for key, item in asdict(value).items()}
     if isinstance(value, dict):
         return {str(key): _to_jsonable(item) for key, item in value.items()}

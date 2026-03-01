@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from .petc import PETCReport, _is_prime, petc_invariants
+from .petc import _is_prime, petc_invariants
 
 if TYPE_CHECKING:
     from .audit import AuditChain
+    from .types import PETCReport
 
 
 def _prime_stream(count: int) -> list[int]:
@@ -71,7 +72,7 @@ class PETCAllocator:
             for event, prime in zip(chain, allocation.allocated_primes, strict=False)
         ]
 
-    def verify_global_ordering(self) -> dict:
+    def verify_global_ordering(self) -> dict[str, Any]:
         all_primes: list[int] = []
         for allocation in self._allocations.values():
             all_primes.extend(allocation.allocated_primes)

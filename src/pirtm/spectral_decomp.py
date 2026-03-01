@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 
 
@@ -30,7 +32,7 @@ def phase_coherence(eigvals: np.ndarray) -> float:
     return 1.0 - resultant
 
 
-def analyze_tensor(T: np.ndarray) -> dict:
+def analyze_tensor(T: np.ndarray) -> dict[str, Any]:
     eigvals, eigvecs = spectral_decomposition(T)
     return {
         "eigvals": eigvals,
