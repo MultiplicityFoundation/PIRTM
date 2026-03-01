@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Callable, Sequence
 
+from .ace.types import AceCertificate
 from .gate import GatedOutput
 from .types import Certificate, StepInfo
 
@@ -129,7 +130,7 @@ class TelemetryBus:
         )
         self._dispatch(event)
 
-    def emit_certificate(self, cert: Certificate) -> None:
+    def emit_certificate(self, cert: Certificate | AceCertificate) -> None:
         event = TelemetryEvent(
             timestamp=time.time(),
             event_type="certificate",

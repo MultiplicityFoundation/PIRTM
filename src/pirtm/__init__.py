@@ -38,7 +38,7 @@ from .projection import (
     project_parameters_soft,
     project_parameters_weighted_l1,
 )
-from .certify import ace_certificate, iss_bound
+from .certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
 from .fixed_point import fixed_point_estimate
 from .adaptive import AdaptiveMargin
 from .petc import PETCLedger, petc_invariants
@@ -79,6 +79,16 @@ from .spectral_gov import SpectralReport, SpectralGovernor
 from .orchestrator import SessionDescriptor, AggregatedCertificate, SessionSnapshot, SessionOrchestrator
 from .lambda_bridge import LambdaTraceEvent, SubmissionReceipt, LambdaTraceBridge
 from .petc_bridge import PETCAllocation, PETCAllocator
+from .transpiler import TranspileResult, TranspileSpec, transpile
+from .ace import (
+    AceBudget,
+    AceBudgetState,
+    AceCertificate,
+    AceProtocol,
+    AceTelemetry,
+    AceWitness,
+    CertLevel,
+)
 
 __all__ = [
     "StepInfo",
@@ -98,6 +108,8 @@ __all__ = [
     "project_parameters_weighted_l1",
     # certificates / bounds
     "ace_certificate",
+    "ace_certificate_v2",
+    "legacy_ace_certificate",
     "iss_bound",
     # fixed point
     "fixed_point_estimate",
@@ -177,4 +189,16 @@ __all__ = [
     "drmm_step",
     "drmm_evolve",
     "DRMMInferenceLoop",
+    # ACE protocol
+    "AceBudget",
+    "AceBudgetState",
+    "AceCertificate",
+    "AceProtocol",
+    "AceTelemetry",
+    "AceWitness",
+    "CertLevel",
+    # transpiler
+    "TranspileSpec",
+    "TranspileResult",
+    "transpile",
 ]

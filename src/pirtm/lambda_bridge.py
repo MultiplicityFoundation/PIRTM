@@ -28,6 +28,7 @@ class SubmissionReceipt:
     merkle_root: str
     status: str
     timestamp: float
+    poseidon_merkle_root: str | None = None
 
 
 class LambdaTraceBridge:
@@ -79,12 +80,14 @@ class LambdaTraceBridge:
                 batch_id="empty",
                 events_submitted=0,
                 merkle_root="0" * 64,
+                poseidon_merkle_root="0" * 64,
                 status="empty",
                 timestamp=time.time(),
             )
 
         hashes = [event.chain_hash for event in self._pending]
         merkle_root = self._compute_merkle_root(hashes)
+        poseidon_merkle_root = self._compute_poseidon_merkle_root(hashes)
         batch_id = hashlib.sha256(f"{self.session_id}:{merkle_root}:{time.time()}".encode("utf-8")).hexdigest()[:16]
 
         payload = [
@@ -108,6 +111,7 @@ class LambdaTraceBridge:
                 batch_id=batch_id,
                 events_submitted=len(self._pending),
                 merkle_root=merkle_root,
+                poseidon_merkle_root=poseidon_merkle_root,
                 status="dry_run",
                 timestamp=time.time(),
             )
@@ -130,6 +134,25 @@ class LambdaTraceBridge:
                 next_layer.append(hashlib.sha256((left + right).encode("utf-8")).hexdigest())
             layer = next_layer
 
+        return layer[0]
+
+    @staticmethod
+    def _poseidon_compat_hash(value: str) -> str:
+        return hashlib.sha256(f"poseidon:{value}".encode("utf-8")).hexdigest()
+
+    @classmethod
+    def _compute_poseidon_merkle_root(cls, hashes: list[str]) -> str:
+        if not hashes:
+            return "0" * 64
+
+        layer = [cls._poseidon_compat_hash(value) for value in hashes]
+        while len(layer) > 1:
+            next_layer: list[str] = []
+            for index in range(0, len(layer), 2):
+                left = layer[index]
+                right = layer[index + 1] if index + 1 < len(layer) else left
+                next_layer.append(cls._poseidon_compat_hash(left + right))
+            layer = next_layer
         return layer[0]
 
     @property

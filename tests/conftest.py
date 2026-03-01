@@ -1,7 +1,13 @@
 import numpy as np
 import pytest
 
+import pirtm.ace.contracts as _ace_contracts
+
 from pirtm.types import Status, StepInfo
+
+
+def pytest_configure(config):
+	_ace_contracts.enable_debug()
 
 
 @pytest.fixture

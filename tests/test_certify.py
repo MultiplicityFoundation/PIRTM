@@ -1,6 +1,7 @@
 import pytest
 
-from pirtm.certify import ace_certificate, iss_bound
+from pirtm.ace.types import AceCertificate
+from pirtm.certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
 from pirtm.types import StepInfo
 
 
@@ -39,3 +40,24 @@ def test_iss_bound_unstable(unsafe_step_info):
 def test_iss_empty_raises():
     with pytest.raises(ValueError):
         iss_bound([], 0.1)
+
+
+def test_ace_certificate_returns_ace_certificate():
+    info = StepInfo(step=0, q=0.7, epsilon=0.05, nXi=0.4, nLam=0.3, projected=False, residual=0.001)
+    cert = ace_certificate([info])
+    assert isinstance(cert, AceCertificate)
+
+
+def test_ace_certificate_v2_returns_ace_certificate():
+    info = StepInfo(step=0, q=0.7, epsilon=0.05, nXi=0.4, nLam=0.3, projected=False, residual=0.001)
+    with pytest.warns(DeprecationWarning):
+        cert = ace_certificate_v2([info])
+    assert isinstance(cert, AceCertificate)
+
+
+def test_legacy_alias_emits_deprecation():
+    info = StepInfo(step=0, q=0.7, epsilon=0.05, nXi=0.4, nLam=0.3, projected=False, residual=0.001)
+    with pytest.warns(DeprecationWarning):
+        cert = legacy_ace_certificate([info])
+    from pirtm.types import Certificate
+    assert isinstance(cert, Certificate)

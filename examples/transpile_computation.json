@@ -1,0 +1,8 @@
+{
+  "mode": "gradient_descent",
+  "steps": 5,
+  "learning_rate": 0.2,
+  "initial_state": [1.0, 1.0, 1.0],
+  "target_state": [0.0, 0.0, 0.0],
+  "forcing": [0.0, 0.0, 0.0]
+}

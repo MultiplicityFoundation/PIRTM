@@ -175,7 +175,7 @@ print("petc_bridge:", tagged[0], ordering)
 - API reference: `docs/api/README.md`
 - Architecture guide: `docs/architecture.md`
 - Mathematical spec: `docs/math_spec.md`
-- Examples index: `examples/README.md`
+- Examples index: `examples/README.md` (includes transpiler descriptor usage and `--emit-witness` / `--emit-lambda-events` JSON output gating notes)
 
 ## Development
 
@@ -192,6 +192,154 @@ python -m pytest -q
 
 ```bash
 pirtm-conformance --profile all --output text
+```
+
+## Transpiler CLI (Phase 2.1)
+
+Computation transpilation is available from the command line.
+
+Use the checked-in descriptor file: `examples/transpile_computation.json`.
+
+```bash
+pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--emission-policy pass_through \
+	--output summary
+```
+
+Same path via module entrypoint:
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--emission-policy pass_through \
+	--output summary
+```
+
+Structured JSON result with inline computation descriptor:
+
+```bash
+python -m pirtm.cli transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--emission-policy pass_through \
+	--output json
+```
+
+Default JSON output omits `witness_json` and `lambda_events`. Include them explicitly when needed:
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--output json \
+	--emit-witness \
+	--emit-lambda-events
+```
+
+Hash controls for witness export:
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--hash-scheme poseidon_compat \
+	--output json
+```
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--hash-scheme sha256 \
+	--dual-hash \
+	--output json
+```
+
+Dual-hash witness fields now include `stateHashSha256`, `stateHashPoseidon`, `merkleRootSha256`, `merkleRootPoseidon`, with `hashSchemes` indicating active exports.
+
+Witness schema by hash mode:
+
+| Hash mode | Exact output keys |
+| --- | --- |
+| `sha256` | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot` |
+| `poseidon_compat` | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot` |
+| `dual` (or `--dual-hash`) | `stateHash`, `prevStateHash`, `newStateHash`, `merkleRoot`, `stateHashSha256`, `prevStateHashSha256`, `newStateHashSha256`, `stateHashPoseidon`, `prevStateHashPoseidon`, `newStateHashPoseidon`, `merkleRootSha256`, `merkleRootPoseidon`, `hashSchemes` |
+
+Phase 2.2 mode examples (inline descriptor metadata):
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--emission-policy pass_through \
+	--metadata '{"mode":"adam","steps":6,"learning_rate":0.1,"beta1":0.9,"beta2":0.99,"initial_state":[1,1,1],"target_state":[0,0,0]}' \
+	--output summary
+```
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 2 \
+	--emission-policy pass_through \
+	--metadata '{"mode":"iterative_solver","steps":5,"relaxation":0.25,"initial_state":[1,1],"target_state":[0,0]}' \
+	--output summary
+```
+
+Phase 2.3 example (2-layer neural training descriptor):
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_two_layer_nn.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 13 \
+	--emission-policy pass_through \
+	--output summary
+```
+
+Quick verify (writes output to `examples/transpile_result.json`): `python -m pirtm transpile --type computation --input examples/transpile_computation.json --prime-index 7919 --identity-commitment 0xabc123 --dim 3 --emission-policy pass_through --output json --output-file examples/transpile_result.json`
+
+Quick verify, two_layer_nn (writes output to `examples/transpile_two_layer_nn_result.json`): `python -m pirtm transpile --type computation --input examples/transpile_two_layer_nn.json --prime-index 7919 --identity-commitment 0xabc123 --dim 13 --emission-policy pass_through --output json --output-file examples/transpile_two_layer_nn_result.json`
+
+Data asset example with explicit prime channel mapping (`prime_map`):
+
+```bash
+python -m pirtm transpile \
+	--type data_asset \
+	--input README.md \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 8 \
+	--metadata '{"prime_map":[2,3,5,7]}' \
+	--output summary
 ```
 
 - Release/build automation via `Makefile`:
