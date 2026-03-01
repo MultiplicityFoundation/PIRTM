@@ -102,3 +102,66 @@ def test_ace_protocol_rejects_min_level_above_feasible(safe_step_info: StepInfo)
     protocol = AceProtocol()
     with pytest.raises(ValueError, match="min_level"):
         protocol.certify(safe_step_info, prime_index=13, min_level=CertLevel.L2_POWERITER)
+
+
+def test_batch_dispatch_prefers_highest_feasible_level_over_higher_q():
+    matrix = 0.2 * np.eye(2)
+    level2_only = AceTelemetry(
+        step=0,
+        q=0.9,
+        epsilon=0.05,
+        nXi=0.2,
+        nLam=0.1,
+        projected=False,
+        residual=0.0,
+        contraction_matrix=matrix,
+    )
+    level4_capable = AceTelemetry(
+        step=1,
+        q=0.2,
+        epsilon=0.05,
+        nXi=0.2,
+        nLam=0.05,
+        projected=False,
+        residual=0.0,
+        contraction_matrix=matrix,
+        designed_clamp_norm=0.9,
+        designed_perturbation_bound=0.1,
+        disturbance_norm=0.02,
+    )
+
+    witness = AceProtocol().certify([level2_only, level4_capable], prime_index=23)
+
+    assert witness.certificate.level == CertLevel.L4_PERTURBATION
+    assert witness.certificate.details["step"] == 1
+
+
+def test_batch_dispatch_uses_q_tiebreak_with_same_feasible_level():
+    matrix = 0.2 * np.eye(2)
+    lower_q_l3 = AceTelemetry(
+        step=0,
+        q=0.2,
+        epsilon=0.05,
+        nXi=0.2,
+        nLam=0.1,
+        projected=False,
+        residual=0.0,
+        contraction_matrix=matrix,
+        designed_clamp_norm=0.9,
+    )
+    higher_q_l3 = AceTelemetry(
+        step=1,
+        q=0.4,
+        epsilon=0.05,
+        nXi=0.2,
+        nLam=0.1,
+        projected=False,
+        residual=0.0,
+        contraction_matrix=matrix,
+        designed_clamp_norm=0.9,
+    )
+
+    witness = AceProtocol().certify([lower_q_l3, higher_q_l3], prime_index=29)
+
+    assert witness.certificate.level == CertLevel.L3_NONEXPANSIVE
+    assert witness.certificate.details["step"] == 1

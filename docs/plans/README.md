@@ -21,14 +21,14 @@
 | `PIRTM Tier 6 Expansion.md` | **Historical** | Superseded by active roadmap and issue-draft execution model |
 | `PIRTM Tier 7 Expansion.md` | **Historical** | Superseded by active roadmap and issue-draft execution model |
 | `ADR-000_Thread.md` | **Historical / Exploratory** | Background exploration; not authoritative for release decisions |
-| `ADR-006_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-007_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-008_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-009_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-010_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-011_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-012_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
-| `ADR-013_ETP.md` | **Historical / Exploratory** | Exploratory blueprint material; not active release policy |
+| `ADR-006_ETP.md` | **Active / Accepted Candidate** | ACE/PETC modernization sequencing candidate |
+| `ADR-007_ETP.md` | **Active / Accepted Candidate** | Design-parameter commitment model candidate |
+| `ADR-008_ETP.md` | **Active / Accepted Candidate** | Unified ACE telemetry contract candidate |
+| `ADR-009_ETP.md` | **Active / Accepted Candidate** | Certificate type migration candidate |
+| `ADR-010_ETP.md` | **Active / Accepted Candidate** | Release-aligned ACE/PETC blueprint candidate |
+| `ADR-011_ETP.md` | **Active / Accepted Candidate** | Matrix immutability contract candidate |
+| `ADR-012_ETP.md` | **Active / Accepted Candidate** | Envelope validation + TRL discipline candidate |
+| `ADR-013_ETP.md` | **Active / Accepted Candidate** | Protocol default injection semantics candidate |
 
 ## Support Matrix (Current)
 

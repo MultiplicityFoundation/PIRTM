@@ -42,6 +42,7 @@ def certify_l4(
         details={
             "measurement_domain": "SPECTRAL_CLAMP_PERTURBATION",
             "designed_perturbation_bound": perturb_bound,
+            "runtime_nLam": float(telemetry.nLam),
             "disturbance_norm": float(telemetry.disturbance_norm),
             "step": telemetry.step,
         },

@@ -68,8 +68,8 @@ class AceProtocol:
         for rec in records:
             rec.validate()
 
-        representative = max(records, key=lambda rec: rec.q)
-        feasible = representative.highest_feasible_level()
+        ranked_records = [(rec.highest_feasible_level(), rec) for rec in records]
+        feasible, representative = max(ranked_records, key=lambda item: (_rank(item[0]), item[1].q))
         if _rank(feasible) < _rank(min_level):
             raise ValueError(
                 f"AceProtocol.certify: telemetry supports up to {feasible.value} "
@@ -130,13 +130,21 @@ class AceProtocol:
         return result
 
     def _inject_design_params(self, telemetry: AceTelemetry) -> AceTelemetry:
-        injected = AceTelemetry(**telemetry.__dict__)
-        if injected.designed_clamp_norm is None and self.designed_clamp_norm is not None:
-            injected.designed_clamp_norm = self.designed_clamp_norm
-        if (
-            injected.designed_perturbation_bound is None
+        needs_clamp_injection = (
+            telemetry.designed_clamp_norm is None and self.designed_clamp_norm is not None
+        )
+        needs_perturbation_injection = (
+            telemetry.designed_perturbation_bound is None
             and self.designed_perturbation_bound is not None
-        ):
+        )
+
+        if not needs_clamp_injection and not needs_perturbation_injection:
+            return telemetry
+
+        injected = AceTelemetry(**telemetry.__dict__)
+        if needs_clamp_injection:
+            injected.designed_clamp_norm = self.designed_clamp_norm
+        if needs_perturbation_injection:
             injected.designed_perturbation_bound = self.designed_perturbation_bound
         return injected
 

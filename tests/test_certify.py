@@ -62,3 +62,26 @@ def test_legacy_alias_emits_deprecation():
     from pirtm.types import Certificate
 
     assert isinstance(cert, Certificate)
+
+
+def test_ace_certificate_details_preserve_legacy_keys(safe_step_info):
+    cert = ace_certificate([safe_step_info])
+    assert "max_q" in cert.details
+    assert "target" in cert.details
+    assert "steps" in cert.details
+
+
+def test_legacy_alias_matches_primary_legacy_fields(safe_step_info):
+    ace_cert = ace_certificate([safe_step_info])
+    with pytest.warns(DeprecationWarning):
+        legacy_cert = legacy_ace_certificate([safe_step_info])
+
+    assert legacy_cert.certified == ace_cert.certified
+    assert legacy_cert.margin == ace_cert.margin
+    assert legacy_cert.tail_bound == ace_cert.tail_bound
+
+
+def test_legacy_alias_includes_ace_level_detail(safe_step_info):
+    with pytest.warns(DeprecationWarning):
+        legacy_cert = legacy_ace_certificate([safe_step_info])
+    assert "ace_level" in legacy_cert.details

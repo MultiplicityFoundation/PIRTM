@@ -15,6 +15,14 @@ These drafts are generated from `docs/plans/PIRTM Core Completion.md` remaining 
 9. [R9 — Align required CI paths with ACE/transpiler critical suites](./R9-align-ci-paths-with-critical-suites.md)
 10. [R10 — Consolidate plans/docs into active roadmap and support matrix](./R10-consolidate-plans-docs-and-support-matrix.md)
 
+## ETP Execution Passes
+
+- [ETP Pass 1 — ADR-013/011/008 (Docs + Tests)](./ETP-pass1-013-011-008.md)
+- [ETP Pass 2 — ADR-009/007 (Docs + Tests)](./ETP-pass2-009-007.md)
+- [ETP Pass 3 — ADR-012 (Docs + Tests)](./ETP-pass3-012.md)
+- [ETP Pass 4 — ADR-010 (Docs + Tests)](./ETP-pass4-010.md)
+- [ETP Pass 5 — ADR-006 (Docs + Tests)](./ETP-pass5-006.md)
+
 ## Usage
 
 - Copy each draft body into a GitHub issue.

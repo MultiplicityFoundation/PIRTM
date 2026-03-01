@@ -38,6 +38,7 @@ def certify_l3(
             "measurement_domain": "SPECTRAL_PLUS_DESIGN_CLAMP",
             "designed_clamp_norm": design_bound,
             "measured_lipschitz_upper": measured_bound,
+            "runtime_nXi": float(telemetry.nXi),
             "step": telemetry.step,
         },
     )
