@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from typing import Iterable, Mapping
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def _is_prime(value: int) -> bool:
@@ -27,7 +30,7 @@ def infinite_prime_check(primes: Iterable[int], min_density: float = 0.05) -> di
 
     largest = primes_list[-1]
     density = len(primes_list) / max(1, largest)
-    gaps = [b - a for a, b in zip(primes_list, primes_list[1:])]
+    gaps = [b - a for a, b in zip(primes_list, primes_list[1:], strict=False)]
     largest_gap = max(gaps) if gaps else 0
     return {
         "ok": density >= min_density,

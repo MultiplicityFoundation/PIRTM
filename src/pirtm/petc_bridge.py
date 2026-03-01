@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from .audit import AuditChain
 from .petc import PETCReport, _is_prime, petc_invariants
+
+if TYPE_CHECKING:
+    from .audit import AuditChain
 
 
 def _prime_stream(count: int) -> list[int]:
@@ -46,7 +49,9 @@ class PETCAllocator:
 
         required = offset + (event_count * self.max_sessions)
         primes_pool = _prime_stream(max(required, event_count + offset + 1))
-        allocated = primes_pool[offset : offset + event_count * self.max_sessions : self.max_sessions]
+        allocated = primes_pool[
+            offset : offset + event_count * self.max_sessions : self.max_sessions
+        ]
 
         report = petc_invariants(allocated, min_length=min(3, event_count))
         allocation = PETCAllocation(
@@ -61,7 +66,10 @@ class PETCAllocator:
 
     def tag_audit_chain(self, session_id: str, chain: AuditChain) -> list[tuple[int, str]]:
         allocation = self.allocate(session_id, len(chain))
-        return [(prime, event.chain_hash) for event, prime in zip(chain, allocation.allocated_primes)]
+        return [
+            (prime, event.chain_hash)
+            for event, prime in zip(chain, allocation.allocated_primes, strict=False)
+        ]
 
     def verify_global_ordering(self) -> dict:
         all_primes: list[int] = []

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-
-from pirtm.types import StepInfo
+from typing import TYPE_CHECKING
 
 from ..types import AceCertificate, CertLevel
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from pirtm.types import StepInfo
 
 
 def certify_l0(

@@ -2,12 +2,14 @@
 # Unit Tests for Prime Generation and Indexing in PIRTM
 
 import unittest
+
 import numpy as np
-from sympy import isprime, primerange
+from sympy import isprime
+
 from pirtm._legacy import PrimeTensorSystem
 
-class TestPrimeTensorSystem(unittest.TestCase):
 
+class TestPrimeTensorSystem(unittest.TestCase):
     def test_prime_list_generation(self):
         """Ensure prime list contains only primes and is of correct length."""
         pts = PrimeTensorSystem(dim=3, num_primes=50)
@@ -28,14 +30,14 @@ class TestPrimeTensorSystem(unittest.TestCase):
         pts = PrimeTensorSystem(dim=3, num_primes=10)
         for p in pts.primes:
             T = pts.tensors[p]
-            I = np.eye(3)
+            identity = np.eye(3)
             should_be_identity = T.T @ T / np.linalg.norm(T)
-            self.assertTrue(np.allclose(should_be_identity, I, atol=1e-1))
+            self.assertTrue(np.allclose(should_be_identity, identity, atol=1e-1))
 
     def test_tensor_scaling(self):
         """Test that each tensor is scaled by log(p)."""
         pts = PrimeTensorSystem(dim=2, num_primes=5)
-        for i, p in enumerate(pts.primes[:5]):
+        for i, _p in enumerate(pts.primes[:5]):
             T = pts.get_tensor(i)
             approx_norm = np.linalg.norm(T)
             self.assertGreater(approx_norm, 0.5)
@@ -46,5 +48,6 @@ class TestPrimeTensorSystem(unittest.TestCase):
         pts = PrimeTensorSystem(dim=5, num_primes=10)
         self.assertTrue(np.allclose(pts.get_state(), np.eye(5)))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

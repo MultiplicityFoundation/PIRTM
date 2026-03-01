@@ -7,6 +7,9 @@ Migration path: use supported public spectral APIs
 
 import warnings as _w
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 _w.warn(
     "pirtm._legacy.spectral_decomp is deprecated and targeted for removal in v0.3.0. "
     "Use pirtm.spectral_decomp / pirtm.spectral_gov.",
@@ -14,8 +17,6 @@ _w.warn(
     stacklevel=2,
 )
 
-import numpy as np
-import matplotlib.pyplot as plt
 
 def spectral_decomposition(T):
     """
@@ -31,6 +32,7 @@ def spectral_decomposition(T):
     """
     eigvals, eigvecs = np.linalg.eig(T)
     return eigvals, eigvecs
+
 
 def spectral_entropy(eigvals, normalize=True):
     """
@@ -52,6 +54,7 @@ def spectral_entropy(eigvals, normalize=True):
     entropy = entropy + 0.5 * phase_variability
     return entropy
 
+
 def phase_coherence(eigvals):
     """
     Analyze phase coherence of eigenvalues (projected on unit circle).
@@ -66,7 +69,8 @@ def phase_coherence(eigvals):
     R = np.abs(np.sum(np.exp(1j * phases))) / len(phases)
     return 1 - R  # 0 = perfect coherence
 
-def plot_spectrum(eigvals, title='Eigenvalue Spectrum'):
+
+def plot_spectrum(eigvals, title="Eigenvalue Spectrum"):
     """
     Visualize eigenvalues in the complex plane.
 
@@ -76,14 +80,15 @@ def plot_spectrum(eigvals, title='Eigenvalue Spectrum'):
     """
     plt.figure(figsize=(6, 6))
     plt.scatter(eigvals.real, eigvals.imag, alpha=0.7)
-    plt.axhline(0, color='gray', linewidth=0.5)
-    plt.axvline(0, color='gray', linewidth=0.5)
-    plt.xlabel('Re(λ)')
-    plt.ylabel('Im(λ)')
+    plt.axhline(0, color="gray", linewidth=0.5)
+    plt.axvline(0, color="gray", linewidth=0.5)
+    plt.xlabel("Re(λ)")
+    plt.ylabel("Im(λ)")
     plt.title(title)
     plt.grid(True)
-    plt.axis('equal')
+    plt.axis("equal")
     plt.show()
+
 
 def analyze_tensor(T, plot=False):
     """
@@ -101,8 +106,4 @@ def analyze_tensor(T, plot=False):
     coherence = phase_coherence(eigvals)
     if plot:
         plot_spectrum(eigvals)
-    return {
-        'eigvals': eigvals,
-        'entropy': entropy,
-        'coherence': coherence
-    }
+    return {"eigvals": eigvals, "entropy": entropy, "coherence": coherence}

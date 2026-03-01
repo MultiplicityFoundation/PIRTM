@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 from .types import CSCBudget, CSCMargin, StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def solve_budget(
@@ -42,10 +45,7 @@ def compute_margin(
     q_actual = float(Xi_norm + Lam_norm * op_norm_T)
     margin = q_target - q_actual
 
-    if Lam_norm > 0.0:
-        t_headroom = ((1.0 - epsilon) - Xi_norm) / Lam_norm
-    else:
-        t_headroom = float("inf")
+    t_headroom = (1.0 - epsilon - Xi_norm) / Lam_norm if Lam_norm > 0.0 else float("inf")
 
     epsilon_headroom = max(0.0, margin)
     return CSCMargin(
@@ -67,10 +67,7 @@ def multi_step_margin(infos: Sequence[StepInfo]) -> CSCMargin:
     q_actual = worst.q
     margin = q_target - q_actual
 
-    if worst.nLam > 0.0:
-        t_headroom = (q_target - worst.nXi) / worst.nLam
-    else:
-        t_headroom = float("inf")
+    t_headroom = (q_target - worst.nXi) / worst.nLam if worst.nLam > 0.0 else float("inf")
 
     return CSCMargin(
         margin=margin,
@@ -89,13 +86,12 @@ def sensitivity(
     epsilon: float = 0.05,
 ) -> dict[str, float]:
     q_target = 1.0 - epsilon
-    if Lam_norm > 0.0:
-        t_max = (q_target - Xi_norm) / Lam_norm
-    else:
-        t_max = float("inf")
+    t_max = (q_target - Xi_norm) / Lam_norm if Lam_norm > 0.0 else float("inf")
 
     epsilon_min = max(0.0, Xi_norm + Lam_norm - 1.0)
-    epsilon_headroom = float("inf") if Xi_norm == 0.0 and Lam_norm == 0.0 else max(0.0, epsilon - epsilon_min)
+    epsilon_headroom = (
+        float("inf") if Xi_norm == 0.0 and Lam_norm == 0.0 else max(0.0, epsilon - epsilon_min)
+    )
     return {
         "T_max": t_max,
         "epsilon_min": epsilon_min,

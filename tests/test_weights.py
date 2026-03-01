@@ -9,7 +9,7 @@ def test_synthesize_shapes_and_length(small_primes):
     schedule = synthesize_weights(small_primes[:5], dim=4)
     assert len(schedule.Xi_seq) == 5
     assert all(x.shape == (4, 4) for x in schedule.Xi_seq)
-    assert all(l.shape == (4, 4) for l in schedule.Lam_seq)
+    assert all(lam.shape == (4, 4) for lam in schedule.Lam_seq)
 
 
 def test_validate_schedule_passes(small_primes):

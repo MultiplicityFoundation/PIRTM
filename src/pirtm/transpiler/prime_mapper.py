@@ -125,7 +125,7 @@ def map_content_to_prime_channels(
         primes = [int(value) for value in prime_map]
 
     mapped: list[PrimeChannel] = []
-    for prime, channel in zip(primes, channels):
+    for prime, channel in zip(primes, channels, strict=True):
         digest = hashlib.sha256(channel).hexdigest()
         mapped.append(PrimeChannel(prime=prime, digest=digest, vector=_to_vector(channel, dim)))
     return mapped

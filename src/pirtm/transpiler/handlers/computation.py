@@ -3,9 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from collections.abc import Callable
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -18,9 +19,10 @@ from pirtm.weights import synthesize_weights, validate_schedule
 
 from ..identity import bind_identity
 from ..models import TranspileResult
-from ..spec import TranspileSpec
 from ..witness import build_witness
 
+if TYPE_CHECKING:
+    from ..spec import TranspileSpec
 
 Operator = Callable[[np.ndarray], np.ndarray]
 
@@ -140,7 +142,10 @@ def _build_computation_mapping(
         Xi_seq = [xi_scale * np.eye(dim) for _ in range(step_count)]
         Lam_seq = [(-lam_scale) * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
-        T: Operator = lambda x: x - target_state
+
+        def T(x):
+            return x - target_state
+
         extras = {
             "mode": mode,
             "learningRate": learning_rate,
@@ -161,15 +166,17 @@ def _build_computation_mapping(
         G_seq = [forcing.copy() for _ in range(step_count)]
         effective_lrs: list[float] = []
         for t in range(1, step_count + 1):
-            bias_correction = (1.0 - beta1**t)
-            variance_correction = (1.0 - beta2**t)
+            bias_correction = 1.0 - beta1**t
+            variance_correction = 1.0 - beta2**t
             lr_t = learning_rate * (variance_correction**0.5) / max(1e-12, bias_correction)
             lr_t = min(max(lr_t, 1e-4), max_effective_lr)
             effective_lrs.append(lr_t)
             Xi_seq.append((1.0 - lr_t) * np.eye(dim))
             Lam_seq.append((-lr_t) * np.eye(dim))
 
-        T = lambda x: x - target_state
+        def T(x):
+            return x - target_state
+
         extras = {
             "mode": mode,
             "learningRate": learning_rate,
@@ -190,7 +197,10 @@ def _build_computation_mapping(
         Xi_seq = [(1.0 - relaxation) * np.eye(dim) for _ in range(step_count)]
         Lam_seq = [relaxation * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
-        T = lambda x: target_state
+
+        def T(x):
+            return target_state
+
         extras = {
             "mode": mode,
             "relaxation": relaxation,
@@ -204,7 +214,9 @@ def _build_computation_mapping(
         input_dim = int(config.get("input_dim", 2))
         hidden_dim = int(config.get("hidden_dim", 3))
         output_dim = int(config.get("output_dim", 1))
-        expected_dim = (input_dim * hidden_dim) + hidden_dim + (hidden_dim * output_dim) + output_dim
+        expected_dim = (
+            (input_dim * hidden_dim) + hidden_dim + (hidden_dim * output_dim) + output_dim
+        )
         if dim != expected_dim:
             raise ValueError(
                 f"two_layer_nn mode expects dim={expected_dim} for shape ({input_dim},{hidden_dim},{output_dim}), got dim={dim}"
@@ -224,7 +236,10 @@ def _build_computation_mapping(
         Xi_seq = [xi_scale * np.eye(dim) for _ in range(step_count)]
         Lam_seq = [(-lam_scale) * np.eye(dim) for _ in range(step_count)]
         G_seq = [forcing.copy() for _ in range(step_count)]
-        T = lambda x: x - target_state
+
+        def T(x):
+            return x - target_state
+
         extras = {
             "mode": mode,
             "learningRate": learning_rate,
@@ -270,7 +285,9 @@ def transpile_computation(spec: TranspileSpec) -> TranspileResult:
 
     learning_rate = float(config.get("learning_rate", 0.2))
     adaptive_enabled = bool(config.get("adaptive", True))
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     session = QARISession(
         QARIConfig(
@@ -308,7 +325,9 @@ def transpile_computation(spec: TranspileSpec) -> TranspileResult:
 
     ledger = PETCLedger(min_length=3)
 
-    for step_idx, (Xi_t, Lam_t, G_t) in enumerate(zip(Xi_seq, Lam_seq, G_seq), start=1):
+    for step_idx, (Xi_t, Lam_t, G_t) in enumerate(
+        zip(Xi_seq, Lam_seq, G_seq, strict=False), start=1
+    ):
         gated = session.step(x_state, Xi_t, Lam_t, T, G_t)
         x_state = gated.X_next
         trajectory.append(x_state.copy())
@@ -316,7 +335,9 @@ def transpile_computation(spec: TranspileSpec) -> TranspileResult:
 
         if _is_prime(step_idx):
             digest = hashlib.sha256(x_state.tobytes()).hexdigest()
-            ledger.append(step_idx, event={"type": "prime_step", "state_hash": digest}, info=gated.info)
+            ledger.append(
+                step_idx, event={"type": "prime_step", "state_hash": digest}, info=gated.info
+            )
 
     loss_initial: float | None = None
     loss_final: float | None = None

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import argparse
 import json
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .spec import TranspileSpec
+
+if TYPE_CHECKING:
+    import argparse
 
 
 def add_transpile_parser(subparsers: Any) -> argparse.ArgumentParser:

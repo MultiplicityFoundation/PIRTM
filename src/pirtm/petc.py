@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import math
 import time
-from typing import Any, Iterator, Iterable
+from typing import TYPE_CHECKING, Any
 
 from .types import PETCEntry, PETCReport, StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 
 def _is_prime(n: int) -> bool:
@@ -15,10 +18,7 @@ def _is_prime(n: int) -> bool:
     if n % 2 == 0:
         return False
     limit = int(math.sqrt(n)) + 1
-    for k in range(3, limit, 2):
-        if n % k == 0:
-            return False
-    return True
+    return all(n % k != 0 for k in range(3, limit, 2))
 
 
 def _prime_count(lo: int, hi: int) -> int:
@@ -63,11 +63,7 @@ class PETCLedger:
         denominator = _prime_count(lo_i, hi_i)
         if denominator == 0:
             return 0.0
-        present = {
-            entry.prime
-            for entry in self._entries
-            if lo_i <= entry.prime <= hi_i
-        }
+        present = {entry.prime for entry in self._entries if lo_i <= entry.prime <= hi_i}
         return len(present) / denominator
 
     def validate(self) -> PETCReport:
@@ -77,9 +73,9 @@ class PETCLedger:
             return PETCReport(satisfied=False, chain_length=0)
 
         violations = [idx for idx, value in enumerate(primes) if not _is_prime(value)]
-        monotonic = all(a < b for a, b in zip(primes, primes[1:]))
+        monotonic = all(a < b for a, b in zip(primes, primes[1:], strict=False))
         gap_violations = [
-            (a, b) for a, b in zip(primes, primes[1:]) if (b - a) > self.max_gap
+            (a, b) for a, b in zip(primes, primes[1:], strict=False) if (b - a) > self.max_gap
         ]
         coverage = self.coverage(primes[0], primes[-1]) if monotonic else 0.0
 

@@ -4,13 +4,17 @@ import argparse
 import json
 import sys
 from dataclasses import asdict, dataclass
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
 from .certify import ace_certificate
 from .recurrence import run
-from .types import StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from .types import StepInfo
 
 
 @dataclass
@@ -84,7 +88,8 @@ def check_core_profile(
         op_norm_T=op_norm_T,
     )
     deterministic = len(infos) == len(infos2) and all(
-        abs(a.q - b.q) < 1e-12 and a.projected == b.projected for a, b in zip(infos, infos2)
+        abs(a.q - b.q) < 1e-12 and a.projected == b.projected
+        for a, b in zip(infos, infos2, strict=False)
     )
     result.record("deterministic_remediation", deterministic, "repeat run equality")
 
@@ -132,13 +137,19 @@ def _cli_main() -> None:
     Xi_seq = [0.3 * np.eye(dim)] * n_steps
     Lam_seq = [0.2 * np.eye(dim)] * n_steps
     G_seq = [np.zeros(dim)] * n_steps
-    T = lambda x: 0.8 * x
-    P = lambda x: x
+
+    def T(x):
+        return 0.8 * x
+
+    def P(x):
+        return x
 
     results: list[ConformanceResult] = []
     if args.profile in ("core", "all"):
         results.append(
-            check_core_profile(X0, Xi_seq, Lam_seq, G_seq, T, P, epsilon=args.epsilon, op_norm_T=0.8)
+            check_core_profile(
+                X0, Xi_seq, Lam_seq, G_seq, T, P, epsilon=args.epsilon, op_norm_T=0.8
+            )
         )
 
     if args.profile in ("integrity", "all"):

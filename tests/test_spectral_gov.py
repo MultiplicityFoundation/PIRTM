@@ -1,11 +1,11 @@
-import numpy as np
-
 from pirtm.spectral_gov import SpectralGovernor
 
 
 def test_spectral_governor_analyze_and_clamp():
     gov = SpectralGovernor(dim=3, min_epsilon=0.01, max_epsilon=0.2, safety_margin=0.1)
-    T = lambda x: 0.7 * x
+
+    def T(x):
+        return 0.7 * x
 
     report = gov.analyze(T)
     assert report.spectral_radius < 1.0
@@ -16,7 +16,10 @@ def test_spectral_governor_analyze_and_clamp():
 
 def test_spectral_governor_non_contractive_sets_max_epsilon():
     gov = SpectralGovernor(dim=2, max_epsilon=0.25)
-    T = lambda x: 1.2 * x
+
+    def T(x):
+        return 1.2 * x
+
     epsilon, op_norm, report = gov.govern(T)
     assert report.contraction_feasible is False
     assert epsilon == 0.25

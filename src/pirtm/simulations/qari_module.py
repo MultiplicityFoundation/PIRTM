@@ -8,6 +8,7 @@ import numpy as np
 
 from pirtm.simulations.core_helpers import PrimeTensorBank, analyze_tensor, recursive_update
 
+
 class QARIEngine:
     """
     Quantum-Adaptive Recursive Intelligence (QARI) tensor evolution core.
@@ -47,13 +48,13 @@ class QARIEngine:
         """
         Estimates entropy trajectory of the system.
         """
-        return [analyze_tensor(X)['entropy'] for X in self.state_history]
+        return [analyze_tensor(X)["entropy"] for X in self.state_history]
 
     def phase_stability(self):
         """
         Tracks circular variance of Ξ(t) over time.
         """
-        return [analyze_tensor(X)['coherence'] for X in self.state_history]
+        return [analyze_tensor(X)["coherence"] for X in self.state_history]
 
     def get_final_state(self):
         return self.Xi
@@ -61,10 +62,11 @@ class QARIEngine:
     def get_history(self):
         return self.state_history
 
+
 if __name__ == "__main__":
     print("Initializing QARI Tensor Engine...")
     qari = QARIEngine(dim=6, Lambda_m=0.87)
     qari.evolve(steps=100)
 
-    print("Final State Entropy:", analyze_tensor(qari.get_final_state())['entropy'])
-    print("Final Phase Coherence:", analyze_tensor(qari.get_final_state())['coherence'])
+    print("Final State Entropy:", analyze_tensor(qari.get_final_state())["entropy"])
+    print("Final Phase Coherence:", analyze_tensor(qari.get_final_state())["coherence"])

@@ -8,9 +8,15 @@ def _safe_case():
     X = np.ones(3)
     Xi = 0.2 * np.eye(3)
     Lam = 0.2 * np.eye(3)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(3)
-    P = lambda x: x
+
+    def P(x):
+        return x
+
     return X, Xi, Lam, T, G, P
 
 
@@ -34,9 +40,14 @@ def test_csl_gate_skips_csl_when_contraction_gate_blocks():
     X = np.ones(3)
     Xi = 0.95 * np.eye(3)
     Lam = 0.95 * np.eye(3)
-    T = lambda x: x
+
+    def T(x):
+        return x
+
     G = np.zeros(3)
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     out = gate(X, Xi, Lam, T, G, P, step_index=0, epsilon=0.05, op_norm_T=1.0)
     assert out.emitted is False
@@ -53,9 +64,14 @@ def test_csl_silence_returns_noop_input_state():
     X = np.ones(2)
     Xi = 0.2 * np.eye(2)
     Lam = 0.2 * np.eye(2)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(2)
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     out = gate(X, Xi, Lam, T, G, P, step_index=1, epsilon=0.05, op_norm_T=0.8)
     assert out.silenced is True

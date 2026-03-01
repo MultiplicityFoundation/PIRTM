@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-from typing import Sequence, Tuple
+from typing import TYPE_CHECKING
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def fixed_point_estimate(
     history: Sequence[np.ndarray],
     *,
     window: int = 5,
-) -> Tuple[np.ndarray, float]:
+) -> tuple[np.ndarray, float]:
     """Average the last ``window`` iterates and report a tail deviation bound."""
 
     if not history:

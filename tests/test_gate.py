@@ -8,9 +8,15 @@ def _projected_case(dim: int = 3):
     X = np.ones(dim)
     Xi = 0.9 * np.eye(dim)
     Lam = 0.9 * np.eye(dim)
-    T = lambda x: x
+
+    def T(x):
+        return x
+
     G = np.zeros(dim)
-    P = lambda x: x
+
+    def P(x):
+        return x
+
     return X, Xi, Lam, T, G, P
 
 
@@ -48,9 +54,14 @@ def test_custom_predicate_composes_with_contraction():
     X = np.ones(dim)
     Xi = 0.2 * np.eye(dim)
     Lam = 0.2 * np.eye(dim)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(dim)
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     gate = EmissionGate(policy=EmissionPolicy.SUPPRESS, custom_predicate=lambda _x, _i: False)
     out = gate(X, Xi, Lam, T, G, P, epsilon=0.05, op_norm_T=0.8)
@@ -65,8 +76,13 @@ def test_gated_run_collects_trace():
     Xi_seq = [0.2 * np.eye(dim)] * 4
     Lam_seq = [0.2 * np.eye(dim)] * 4
     G_seq = [np.zeros(dim)] * 4
-    T = lambda x: 0.8 * x
-    P = lambda x: x
+
+    def T(x):
+        return 0.8 * x
+
+    def P(x):
+        return x
+
     gate = EmissionGate(policy=EmissionPolicy.PASS_THROUGH)
 
     Xf, history, outputs = gated_run(

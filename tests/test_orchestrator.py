@@ -13,7 +13,10 @@ def _one_step(session):
     X = np.ones(2)
     Xi = 0.2 * np.eye(2)
     Lam = 0.2 * np.eye(2)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(2)
     session.step(X, Xi, Lam, T, G)
 

@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-import numpy as np
+if TYPE_CHECKING:
+    import numpy as np
 
-from pirtm.conformance import ConformanceResult
-from pirtm.types import Certificate, PETCReport
+    from pirtm.conformance import ConformanceResult
+    from pirtm.types import Certificate, PETCReport
 
-from .spec import TranspileSpec
+    from .spec import TranspileSpec
 
 
 @dataclass(slots=True)

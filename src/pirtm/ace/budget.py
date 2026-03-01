@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from .types import AceBudgetState
 
+
 class AceBudget:
     """Tracks ACE budget consumption across certification calls."""
 

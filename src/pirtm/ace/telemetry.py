@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
-
-import numpy as np
+from typing import TYPE_CHECKING
 
 from pirtm.types import StepInfo
 
 from .types import CertLevel
+
+if TYPE_CHECKING:
+    import numpy as np
 
 _DESIGN_ENVELOPE_TOL = 1e-9
 
@@ -23,22 +24,22 @@ class AceTelemetry:
     nLam: float
     projected: bool
     residual: float
-    note: Optional[str] = None
+    note: str | None = None
 
-    weight_vector: Optional[list[float]] = None
-    basis_norms: Optional[list[float]] = None
+    weight_vector: list[float] | None = None
+    basis_norms: list[float] | None = None
 
-    contraction_matrix: Optional[np.ndarray] = None
-    spectral_estimate: Optional[float] = None
+    contraction_matrix: np.ndarray | None = None
+    spectral_estimate: float | None = None
 
-    designed_clamp_norm: Optional[float] = None
-    clamp_radius: Optional[float] = None
+    designed_clamp_norm: float | None = None
+    clamp_radius: float | None = None
 
-    designed_perturbation_bound: Optional[float] = None
-    disturbance_norm: Optional[float] = None
+    designed_perturbation_bound: float | None = None
+    disturbance_norm: float | None = None
 
     @classmethod
-    def from_step_info(cls, info: StepInfo) -> "AceTelemetry":
+    def from_step_info(cls, info: StepInfo) -> AceTelemetry:
         return cls(
             step=info.step,
             q=info.q,
@@ -73,9 +74,12 @@ class AceTelemetry:
         if not (0.0 < self.epsilon <= 1.0):
             raise ValueError("AceTelemetry.epsilon must be in (0, 1]")
 
-        if self.weight_vector is not None and self.basis_norms is not None:
-            if len(self.weight_vector) != len(self.basis_norms):
-                raise ValueError("weight_vector and basis_norms must have equal length")
+        if (
+            self.weight_vector is not None
+            and self.basis_norms is not None
+            and len(self.weight_vector) != len(self.basis_norms)
+        ):
+            raise ValueError("weight_vector and basis_norms must have equal length")
 
         if self.contraction_matrix is not None:
             matrix = self.contraction_matrix
@@ -92,9 +96,7 @@ class AceTelemetry:
 
         if self.designed_perturbation_bound is not None:
             if self.designed_perturbation_bound < 0:
-                raise ValueError(
-                    "DESIGN_PARAMETER_INVALID: designed_perturbation_bound < 0"
-                )
+                raise ValueError("DESIGN_PARAMETER_INVALID: designed_perturbation_bound < 0")
             if self.nLam > self.designed_perturbation_bound + _DESIGN_ENVELOPE_TOL:
                 raise RuntimeError(
                     "DESIGN_ENVELOPE_VIOLATION: nLam(runtime) exceeds designed_perturbation_bound"

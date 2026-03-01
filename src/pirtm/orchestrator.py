@@ -4,10 +4,13 @@ import hashlib
 import json
 import time
 from dataclasses import asdict, dataclass
+from typing import TYPE_CHECKING
 
 from .audit import AuditChain
 from .qari import QARIConfig, QARISession
-from .types import Certificate
+
+if TYPE_CHECKING:
+    from .types import Certificate
 
 
 @dataclass(frozen=True)
@@ -77,7 +80,9 @@ class SessionOrchestrator:
     ) -> AggregatedCertificate:
         if session_ids is None:
             session_ids = [
-                sid for sid, desc in self._descriptors.items() if desc.status in ("active", "completed")
+                sid
+                for sid, desc in self._descriptors.items()
+                if desc.status in ("active", "completed")
             ]
 
         certs: list[Certificate] = []
@@ -153,7 +158,9 @@ class SessionOrchestrator:
     def global_summary(self) -> dict:
         per_session = {sid: session.summary() for sid, session in self._sessions.items()}
         total_steps = sum(summary.get("steps", 0) for summary in per_session.values())
-        total_projections = sum(summary.get("projected_count", 0) for summary in per_session.values())
+        total_projections = sum(
+            summary.get("projected_count", 0) for summary in per_session.values()
+        )
         return {
             "total_sessions": len(self._sessions),
             "active": len([d for d in self._descriptors.values() if d.status == "active"]),

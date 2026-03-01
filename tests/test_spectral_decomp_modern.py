@@ -1,6 +1,11 @@
 import numpy as np
 
-from pirtm.spectral_decomp import analyze_tensor, phase_coherence, spectral_decomposition, spectral_entropy
+from pirtm.spectral_decomp import (
+    analyze_tensor,
+    phase_coherence,
+    spectral_decomposition,
+    spectral_entropy,
+)
 
 
 def test_modern_spectral_decomp_basics():

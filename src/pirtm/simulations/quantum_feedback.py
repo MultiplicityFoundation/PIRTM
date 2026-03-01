@@ -7,11 +7,12 @@ dependencies and uses core-backed simulation helpers.
 import numpy as np
 
 from pirtm.simulations.core_helpers import (
-        PrimeTensorBank,
-        analyze_tensor_with_plot,
-        feedback_operator,
-        recursive_update,
+    PrimeTensorBank,
+    analyze_tensor_with_plot,
+    feedback_operator,
+    recursive_update,
 )
+
 
 class QuantumFeedbackSimulator:
     """
@@ -68,6 +69,7 @@ class QuantumFeedbackSimulator:
     def get_feedback_history(self):
         return self.feedback_history
 
+
 if __name__ == "__main__":
     print("Launching Quantum Feedback Evolution with PIRTM...")
     sim = QuantumFeedbackSimulator(dim=5, num_primes=40, Lambda_m=0.85)
@@ -75,5 +77,5 @@ if __name__ == "__main__":
 
     print("Analyzing final recursive state...")
     results = sim.analyze_final_state(plot=True)
-    print("Spectral Entropy:", results['entropy'])
-    print("Phase Coherence:", results['coherence'])
+    print("Spectral Entropy:", results["entropy"])
+    print("Phase Coherence:", results["coherence"])

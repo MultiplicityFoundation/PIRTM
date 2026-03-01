@@ -23,7 +23,7 @@ def test_build_gain_sequence_profiles():
     rnd2 = build_gain_sequence(5, 4, profile="random", seed=42)
     assert len(decay) == 10 and all(v.shape == (4,) for v in decay)
     assert all(np.allclose(v, 0.0) for v in zeros)
-    assert all(np.allclose(a, b) for a, b in zip(rnd1, rnd2))
+    assert all(np.allclose(a, b) for a, b in zip(rnd1, rnd2, strict=False))
 
 
 def test_check_iss_compatibility():

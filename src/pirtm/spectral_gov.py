@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from .spectral_decomp import phase_coherence, spectral_decomposition, spectral_entropy
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass(frozen=True)
@@ -55,7 +58,9 @@ class SpectralGovernor:
         coherence = float(phase_coherence(eigvals))
 
         singular_values = np.linalg.svd(jacobian, compute_uv=False)
-        op_norm_estimate = float(singular_values[0]) if singular_values.size > 0 else spectral_radius
+        op_norm_estimate = (
+            float(singular_values[0]) if singular_values.size > 0 else spectral_radius
+        )
 
         contraction_feasible = spectral_radius < 1.0
         if contraction_feasible:

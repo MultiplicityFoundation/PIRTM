@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from .csl import CSLVerdict, evaluate_csl
-from .gate import EmissionGate, GatedOutput
-from .types import StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
+
+    from .gate import EmissionGate, GatedOutput
+    from .types import StepInfo
 
 
 @dataclass(frozen=True)

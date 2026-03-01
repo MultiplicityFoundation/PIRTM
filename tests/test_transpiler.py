@@ -1,6 +1,7 @@
-import pytest
-import json
 import hashlib
+import json
+
+import pytest
 
 from pirtm.transpiler import TranspileSpec, transpile
 
@@ -126,7 +127,9 @@ def test_transpile_computation_end_to_end(tmp_path):
     assert payload0["type"] == "identity_binding"
 
     expected_state_hash = hashlib.sha256(
-        json.dumps(result.xi_initial.tolist(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        json.dumps(result.xi_initial.tolist(), sort_keys=True, separators=(",", ":")).encode(
+            "utf-8"
+        )
     ).hexdigest()
     assert result.witness_json["stateHash"] == expected_state_hash
 
@@ -374,7 +377,12 @@ def test_transpile_workflow_unknown_dependency_rejected(tmp_path):
             {
                 "steps": [
                     {"id": "a", "mode": "gradient_descent", "steps": 2},
-                    {"id": "b", "mode": "gradient_descent", "steps": 2, "dependencies": ["missing"]},
+                    {
+                        "id": "b",
+                        "mode": "gradient_descent",
+                        "steps": 2,
+                        "dependencies": ["missing"],
+                    },
                 ]
             }
         ),

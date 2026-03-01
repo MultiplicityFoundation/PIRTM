@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 
 from ..contracts import assert_matrix_not_mutated
-from ..telemetry import AceTelemetry
 from ..types import AceCertificate, CertLevel
+
+if TYPE_CHECKING:
+    from ..telemetry import AceTelemetry
 
 
 def certify_l2(

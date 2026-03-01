@@ -6,7 +6,9 @@ from pirtm.types import StepInfo
 def _chain(n: int):
     chain = AuditChain()
     for idx in range(n):
-        info = StepInfo(step=idx, q=0.4, epsilon=0.05, nXi=0.2, nLam=0.2, projected=False, residual=0.1)
+        info = StepInfo(
+            step=idx, q=0.4, epsilon=0.05, nXi=0.2, nLam=0.2, projected=False, residual=0.1
+        )
         chain.append_step(info)
     return chain
 

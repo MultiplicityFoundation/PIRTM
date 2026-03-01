@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Callable, Iterable, Sequence, Tuple
+from collections.abc import Callable, Sequence
 
 import numpy as np
 
-from .types import Status, StepInfo
 from .projection import project_parameters_soft
-
+from .types import Status, StepInfo
 
 Operator = Callable[[np.ndarray], np.ndarray]
 Projector = Callable[[np.ndarray], np.ndarray]
@@ -81,7 +80,7 @@ def run(
     op_norm_T: float = 1.0,
     tol: float = 1e-6,
     max_steps: int | None = None,
-) -> Tuple[np.ndarray, list[np.ndarray], list[StepInfo], Status]:
+) -> tuple[np.ndarray, list[np.ndarray], list[StepInfo], Status]:
     """Run the PIRTM recurrence until convergence or ``max_steps``."""
 
     X = np.array(X0, dtype=float)

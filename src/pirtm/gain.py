@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
 from .certify import iss_bound
-from .types import StepInfo
+
+if TYPE_CHECKING:
+    from .types import StepInfo
 
 GainProfile = Literal["constant", "decay", "random", "zero"] | Callable[[int], np.ndarray]
 

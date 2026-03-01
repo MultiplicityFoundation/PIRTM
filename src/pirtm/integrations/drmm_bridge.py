@@ -1,12 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
 
-from pirtm import ace_certificate, run, step
+from pirtm.certify import ace_certificate
 from pirtm.gain import estimate_operator_norm
-from pirtm.types import StepInfo
+from pirtm.recurrence import run, step
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
+
+    from pirtm.types import StepInfo
 
 
 def drmm_step(
@@ -21,7 +26,9 @@ def drmm_step(
 ) -> tuple[np.ndarray, StepInfo]:
     if G is None:
         G = np.zeros_like(X)
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     if op_norm_T is None:
         op_norm_T, _ = estimate_operator_norm(T, dim=int(X.shape[0]))
@@ -43,7 +50,9 @@ def drmm_evolve(
     n_steps = len(Xi_sequence)
     if G_sequence is None:
         G_sequence = [np.zeros_like(X0)] * n_steps
-    P = lambda x: x
+
+    def P(x):
+        return x
 
     if op_norm_T is None:
         op_norm_T, _ = estimate_operator_norm(T, dim=int(X0.shape[0]))

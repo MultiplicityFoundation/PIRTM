@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import warnings
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from pirtm.gate import EmissionPolicy, GatedOutput
 from pirtm.qari import QARIConfig, QARISession
 from pirtm.telemetry import MemorySink, TelemetryBus
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class DRMMInferenceLoop:
@@ -62,7 +65,7 @@ class DRMMInferenceLoop:
         history = [np.array(X, copy=True)]
         outputs: list[GatedOutput] = []
 
-        for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq):
+        for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq, strict=False):
             X, out = self.evolve(X, Xi_t, Lam_t, T, G_t)
             history.append(np.array(X, copy=True))
             outputs.append(out)
@@ -74,7 +77,9 @@ class DRMMInferenceLoop:
             "outputs": outputs,
             "certificate": cert,
             "summary": self._session.summary(),
-            "audit_export": self._session.audit_chain.export() if self._session.audit_chain else None,
+            "audit_export": self._session.audit_chain.export()
+            if self._session.audit_chain
+            else None,
         }
 
     @property

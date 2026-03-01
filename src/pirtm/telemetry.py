@@ -5,11 +5,14 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import TYPE_CHECKING
 
-from .ace.types import AceCertificate
-from .gate import GatedOutput
-from .types import Certificate, StepInfo
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
+
+    from .ace.types import AceCertificate
+    from .gate import GatedOutput
+    from .types import Certificate, StepInfo
 
 
 @dataclass(frozen=True)

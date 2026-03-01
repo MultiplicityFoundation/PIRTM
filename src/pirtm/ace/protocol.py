@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import warnings
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from pirtm.types import StepInfo
@@ -13,6 +12,8 @@ from .types import AceBudgetState, AceCertificate, CertLevel
 from .witness import AceWitness
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pirtm.types import Certificate
 
 _LEVEL_ORDER = [
@@ -85,7 +86,9 @@ class AceProtocol:
         elif feasible == CertLevel.L1_NORMBOUND:
             cert = certify_l1_from_telemetry(representative, tau=tau, delta=self.delta)
         else:
-            cert = certify_l0([rec.to_step_info() for rec in records], tau=tau, tail_norm=tail_norm, delta=0.0)
+            cert = certify_l0(
+                [rec.to_step_info() for rec in records], tau=tau, tail_norm=tail_norm, delta=0.0
+            )
 
         self.budget.consume(cert.budget_used)
         return AceWitness.from_certificate(cert, prime_index)
@@ -138,7 +141,7 @@ class AceProtocol:
         return injected
 
 
-def to_legacy_certificate(certificate: AceCertificate) -> "Certificate":
+def to_legacy_certificate(certificate: AceCertificate) -> Certificate:
     from pirtm.types import Certificate
 
     return Certificate(

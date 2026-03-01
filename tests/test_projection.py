@@ -43,7 +43,8 @@ def test_wl1_projects_to_budget():
     assert np.sum(weights * np.abs(out)) <= 2.0 + 1e-9
 
 
-def test_wl1_all_zero_weights(values=np.array([1.0, -2.0])):
+def test_wl1_all_zero_weights():
+    values = np.array([1.0, -2.0])
     out, tau = project_parameters_weighted_l1(values, np.zeros_like(values), 0.0)
     assert np.allclose(out, values)
     assert tau == 0.0

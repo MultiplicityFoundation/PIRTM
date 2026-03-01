@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import time
 from dataclasses import asdict
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -15,8 +16,10 @@ from pirtm.qari import QARIConfig, QARISession
 from ..identity import bind_identity
 from ..models import TranspileResult
 from ..prime_mapper import map_content_to_prime_channels
-from ..spec import TranspileSpec
 from ..witness import build_witness
+
+if TYPE_CHECKING:
+    from ..spec import TranspileSpec
 
 
 def _emission_policy(value: str) -> EmissionPolicy:
@@ -94,15 +97,19 @@ def transpile_data_asset(spec: TranspileSpec) -> TranspileResult:
     Xi = 0.25 * np.eye(spec.dim)
     Lam = 0.25 * np.eye(spec.dim)
     G = np.zeros(spec.dim)
-    T = lambda x: 0.5 * x
-    P = lambda x: x
+
+    def T(x):
+        return 0.5 * x
+
+    def P(x):
+        return x
 
     emitted_flags: list[bool] = []
     Xi_seq = [Xi.copy() for _ in range(step_count)]
     Lam_seq = [Lam.copy() for _ in range(step_count)]
     G_seq = [G.copy() for _ in range(step_count)]
 
-    for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq):
+    for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq, strict=False):
         gated = session.step(x_state, Xi_t, Lam_t, T, G_t)
         x_state = gated.X_next
         trajectory.append(x_state.copy())

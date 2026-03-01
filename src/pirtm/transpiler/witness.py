@@ -3,13 +3,14 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
-from pirtm.types import Certificate, StepInfo
+if TYPE_CHECKING:
+    from pirtm.types import Certificate, StepInfo
 
-from .spec import TranspileSpec
+    from .spec import TranspileSpec
 
 
 def _state_hash(state: np.ndarray) -> str:
@@ -18,7 +19,7 @@ def _state_hash(state: np.ndarray) -> str:
 
 
 def _poseidon_compat_hash(text: str) -> str:
-    return hashlib.sha256(f"poseidon:{text}".encode("utf-8")).hexdigest()
+    return hashlib.sha256(f"poseidon:{text}".encode()).hexdigest()
 
 
 def _poseidon_state_hash(state: np.ndarray) -> str:
@@ -27,7 +28,9 @@ def _poseidon_state_hash(state: np.ndarray) -> str:
 
 
 def _trajectory_hash(trajectory: list[np.ndarray]) -> str:
-    payload = json.dumps([state.tolist() for state in trajectory], sort_keys=True, separators=(",", ":"))
+    payload = json.dumps(
+        [state.tolist() for state in trajectory], sort_keys=True, separators=(",", ":")
+    )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -63,10 +66,12 @@ def build_witness(
 
     primary_state_hash = prev_hash if primary_scheme == "sha256" else prev_poseidon_hash
     primary_new_state_hash = new_hash if primary_scheme == "sha256" else new_poseidon_hash
-    primary_merkle_root = merkle_root if primary_scheme == "sha256" else (poseidon_merkle_root or merkle_root)
+    primary_merkle_root = (
+        merkle_root if primary_scheme == "sha256" else (poseidon_merkle_root or merkle_root)
+    )
 
     cert_dict = asdict(certificate)
-    nonce = hashlib.sha256(f"{session_id}:{spec.identity_commitment}".encode("utf-8")).hexdigest()[:32]
+    nonce = hashlib.sha256(f"{session_id}:{spec.identity_commitment}".encode()).hexdigest()[:32]
     witness = {
         "stateHash": primary_state_hash,
         "newStateHash": primary_new_state_hash,

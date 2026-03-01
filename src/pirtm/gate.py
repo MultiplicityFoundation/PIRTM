@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import enum
 from dataclasses import dataclass
-from typing import Callable, Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from .recurrence import step
-from .types import StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
+
+    from .types import StepInfo
 
 
 class EmissionPolicy(enum.Enum):
@@ -137,7 +141,7 @@ def gated_run(
     history = [np.array(X, copy=True)]
     outputs: list[GatedOutput] = []
 
-    for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq):
+    for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq, strict=False):
         out = gate(X, Xi_t, Lam_t, T, G_t, P, epsilon=epsilon, op_norm_T=op_norm_T)
         outputs.append(out)
         X = out.X_next

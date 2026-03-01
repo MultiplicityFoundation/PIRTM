@@ -5,7 +5,9 @@ from pirtm.types import Certificate, StepInfo
 
 
 def _step(step_index: int = 0) -> StepInfo:
-    return StepInfo(step=step_index, q=0.4, epsilon=0.05, nXi=0.2, nLam=0.2, projected=False, residual=0.01)
+    return StepInfo(
+        step=step_index, q=0.4, epsilon=0.05, nXi=0.2, nLam=0.2, projected=False, residual=0.01
+    )
 
 
 def test_audit_chain_verify_true_for_clean_chain():
@@ -50,5 +52,8 @@ def test_audit_export_is_json_parseable_and_deterministic_format():
     exported = chain.export()
     json.dumps(exported)
     payload_json = exported[0]["payload_json"]
-    assert payload_json == '{"epsilon":0.05,"nLam":0.2,"nXi":0.2,"projected":false,"q":0.4,"residual":0.01,"step":0,"type":"step"}'
+    assert (
+        payload_json
+        == '{"epsilon":0.05,"nLam":0.2,"nXi":0.2,"projected":false,"q":0.4,"residual":0.01,"step":0,"type":"step"}'
+    )
     assert len(chain) == 1

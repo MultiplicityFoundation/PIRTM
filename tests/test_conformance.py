@@ -9,8 +9,13 @@ def _basic_sequences(dim: int, n_steps: int):
     Xi_seq = [0.3 * np.eye(dim)] * n_steps
     Lam_seq = [0.2 * np.eye(dim)] * n_steps
     G_seq = [np.zeros(dim)] * n_steps
-    T = lambda x: 0.8 * x
-    P = lambda x: x
+
+    def T(x):
+        return 0.8 * x
+
+    def P(x):
+        return x
+
     return X0, Xi_seq, Lam_seq, G_seq, T, P
 
 

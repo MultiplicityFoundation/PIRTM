@@ -24,7 +24,9 @@ def _resolve_alphas(primes: Sequence[int], profile: WeightProfile) -> np.ndarray
         return np.clip(values, 0.0, 1.0)
 
     if profile == "log_decay":
-        raw = np.array([1.0 / max(math.log(max(2, int(prime))), 1e-12) for prime in primes], dtype=float)
+        raw = np.array(
+            [1.0 / max(math.log(max(2, int(prime))), 1e-12) for prime in primes], dtype=float
+        )
         minimum = float(np.min(raw))
         maximum = float(np.max(raw))
         if maximum - minimum < 1e-12:
@@ -95,7 +97,7 @@ def validate_schedule(
 
     max_q = 0.0
     valid = True
-    for xi, lam, target in zip(schedule.Xi_seq, schedule.Lam_seq, schedule.q_targets):
+    for xi, lam, target in zip(schedule.Xi_seq, schedule.Lam_seq, schedule.q_targets, strict=True):
         q_value = float(np.linalg.norm(xi, 2) + np.linalg.norm(lam, 2) * op_norm_T)
         max_q = max(max_q, q_value)
         if q_value > float(target) + tol:

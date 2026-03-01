@@ -1,17 +1,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
-
-import numpy as np
+from typing import TYPE_CHECKING
 
 from .adaptive import AdaptiveMargin
-from .ace.types import AceCertificate
 from .audit import AuditChain
 from .certify import ace_certificate
 from .gate import EmissionGate, EmissionPolicy, GatedOutput
 from .telemetry import TelemetryBus
-from .types import StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    import numpy as np
+
+    from .ace.types import AceCertificate
+    from .types import StepInfo
 
 
 @dataclass

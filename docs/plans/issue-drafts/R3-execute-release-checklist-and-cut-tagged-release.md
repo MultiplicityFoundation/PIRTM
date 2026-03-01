@@ -42,7 +42,8 @@ The project is currently on a development version. A tagged stable release is re
 	- Critical suites: `41 passed`
 	- Conformance: `profile=core` and `profile=integrity` passed
 	- Artifacts: build + `twine check` passed, `dist/SHA256SUMS` generated
-- Current release-cut blocker: repository-wide lint debt fails strict release gate (`ruff`) on files outside R3 scope (e.g., `src/pirtm/transpiler/*`, `src/pirtm/types.py`, `tests/conftest.py`).
+- Lint/format release-gate debt has been cleared (`ruff check` and `ruff format --check` now pass).
+- Current release-cut blocker: strict `mypy src` gate still fails with pre-existing typing debt outside this lint-focused cleanup scope.
 
 ## Out of Scope
 

@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import warnings
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 from .ace.levels import certify_l0
 from .ace.protocol import to_legacy_certificate
-from .ace.types import AceCertificate
 from .types import Certificate, StepInfo
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from .ace.types import AceCertificate
 
 
 def _ensure_sequence(info: StepInfo | Sequence[StepInfo]) -> list[StepInfo]:

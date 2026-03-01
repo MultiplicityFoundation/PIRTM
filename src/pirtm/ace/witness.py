@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from typing import TYPE_CHECKING
 
-from .types import AceCertificate
+if TYPE_CHECKING:
+    from .types import AceCertificate
 
 
 @dataclass(frozen=True)
@@ -21,5 +23,5 @@ class AceWitness:
         }
 
     @classmethod
-    def from_certificate(cls, certificate: AceCertificate, prime_index: int) -> "AceWitness":
+    def from_certificate(cls, certificate: AceCertificate, prime_index: int) -> AceWitness:
         return cls(certificate=certificate, prime_index=prime_index)

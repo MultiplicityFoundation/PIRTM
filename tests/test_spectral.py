@@ -2,17 +2,19 @@
 # Spectral Convergence Tests for PIRTM Operators
 
 import unittest
+
 import numpy as np
-from pirtm._legacy import PrimeTensorSystem
+
 from pirtm._legacy import (
+    PrimeTensorSystem,
+    analyze_tensor,
+    phase_coherence,
     spectral_decomposition,
     spectral_entropy,
-    phase_coherence,
-    analyze_tensor
 )
 
-class TestSpectralAnalysis(unittest.TestCase):
 
+class TestSpectralAnalysis(unittest.TestCase):
     def setUp(self):
         """Initialize prime tensor system and get sample tensor."""
         self.dim = 4
@@ -42,10 +44,10 @@ class TestSpectralAnalysis(unittest.TestCase):
     def test_analyze_tensor_output(self):
         """Ensure composite analysis includes entropy and coherence."""
         result = analyze_tensor(self.tensor, plot=False)
-        self.assertIn('entropy', result)
-        self.assertIn('coherence', result)
-        self.assertIsInstance(result['entropy'], float)
-        self.assertIsInstance(result['coherence'], float)
+        self.assertIn("entropy", result)
+        self.assertIn("coherence", result)
+        self.assertIsInstance(result["entropy"], float)
+        self.assertIsInstance(result["coherence"], float)
 
     def test_entropy_changes_over_perturbation(self):
         """Verify entropy responds to small perturbations."""
@@ -55,5 +57,6 @@ class TestSpectralAnalysis(unittest.TestCase):
         ent2 = spectral_entropy(spectral_decomposition(perturbed)[0])
         self.assertNotAlmostEqual(ent1, ent2, delta=1e-4)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

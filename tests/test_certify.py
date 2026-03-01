@@ -60,4 +60,5 @@ def test_legacy_alias_emits_deprecation():
     with pytest.warns(DeprecationWarning):
         cert = legacy_ace_certificate([info])
     from pirtm.types import Certificate
+
     assert isinstance(cert, Certificate)

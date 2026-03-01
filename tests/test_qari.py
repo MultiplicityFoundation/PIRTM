@@ -6,13 +6,18 @@ from pirtm.qari import QARIConfig, QARISession
 
 
 def test_qari_step_and_certify_pipeline():
-    cfg = QARIConfig(dim=3, epsilon=0.05, op_norm_T=0.8, emission_policy=EmissionPolicy.PASS_THROUGH)
+    cfg = QARIConfig(
+        dim=3, epsilon=0.05, op_norm_T=0.8, emission_policy=EmissionPolicy.PASS_THROUGH
+    )
     session = QARISession(cfg)
 
     X = np.ones(3)
     Xi = 0.2 * np.eye(3)
     Lam = 0.2 * np.eye(3)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(3)
 
     result = session.step(X, Xi, Lam, T, G)
@@ -40,7 +45,10 @@ def test_qari_max_steps_guard():
     X = np.ones(2)
     Xi = 0.2 * np.eye(2)
     Lam = 0.2 * np.eye(2)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(2)
 
     session.step(X, Xi, Lam, T, G)
@@ -64,7 +72,10 @@ def test_qari_without_audit_and_with_adaptive_update(monkeypatch):
     X = np.ones(2)
     Xi = 0.2 * np.eye(2)
     Lam = 0.2 * np.eye(2)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
+
     G = np.zeros(2)
 
     session.step(X, Xi, Lam, T, G)

@@ -19,10 +19,7 @@ def _is_prime(n: int) -> bool:
     if n % 2 == 0:
         return False
     limit = int(np.sqrt(n)) + 1
-    for candidate in range(3, limit, 2):
-        if n % candidate == 0:
-            return False
-    return True
+    return all(n % candidate != 0 for candidate in range(3, limit, 2))
 
 
 def generate_primes(count: int) -> list[int]:

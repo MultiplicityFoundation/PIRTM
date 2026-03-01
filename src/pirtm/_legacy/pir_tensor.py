@@ -7,6 +7,9 @@ Migration path: use supported top-level PIRTM APIs (`pirtm.recurrence`,
 
 import warnings as _w
 
+import numpy as np
+from sympy import nextprime
+
 _w.warn(
     "pirtm._legacy.pir_tensor is deprecated and targeted for removal in v0.3.0. "
     "Prefer pirtm.recurrence / pirtm.projection / pirtm.qari.",
@@ -14,8 +17,6 @@ _w.warn(
     stacklevel=2,
 )
 
-import numpy as np
-from sympy import primerange, nextprime
 
 class PrimeTensorSystem:
     """

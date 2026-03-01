@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Tuple
-
 import numpy as np
 
 
@@ -10,7 +8,7 @@ def project_parameters_soft(
     Lam: np.ndarray,
     op_norm_T: float,
     target: float,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Scale (Ξ, Λ) so that ||Ξ|| + ||Λ|| * ||T|| <= target."""
 
     nXi = float(np.linalg.norm(Xi, 2))
@@ -30,7 +28,7 @@ def project_parameters_weighted_l1(
     budget: float,
     *,
     tol: float = 1e-9,
-) -> Tuple[np.ndarray, float]:
+) -> tuple[np.ndarray, float]:
     """Project ``values`` onto the weighted-\u21111 ball ``sum w_i |x_i| <= budget``."""
 
     values = np.asarray(values, dtype=float)

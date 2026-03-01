@@ -1,12 +1,13 @@
 # 📦 test_tensor_dynamics.py
 # Validation of Recursive Tensor Evolution in PIRTM
 import unittest
+
 import numpy as np
-from pirtm._legacy import PrimeTensorSystem
-from pirtm._legacy import recursive_update, contraction_check, is_stable
+
+from pirtm._legacy import PrimeTensorSystem, contraction_check, is_stable, recursive_update
+
 
 class TestTensorDynamics(unittest.TestCase):
-
     def setUp(self):
         """Initialize a PIRTM tensor system for testing."""
         self.dim = 3
@@ -31,9 +32,7 @@ class TestTensorDynamics(unittest.TestCase):
     def test_contraction_coefficient_validity(self):
         """Check that contraction coefficient k is computable and non-negative."""
         k = contraction_check(
-            tensor_sequence=[self.T],
-            alpha_weights=[1.0],
-            p_indices=[self.pts.primes[0]]
+            tensor_sequence=[self.T], alpha_weights=[1.0], p_indices=[self.pts.primes[0]]
         )
         self.assertIsInstance(k, float)
         self.assertGreaterEqual(k, 0)
@@ -55,5 +54,6 @@ class TestTensorDynamics(unittest.TestCase):
         avg_diff = np.mean(np.diff(norms))
         self.assertLessEqual(avg_diff, 1.0)  # Stable growth or decay
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

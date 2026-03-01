@@ -15,13 +15,20 @@ from pirtm import (
 
 def test_full_pipeline_converges(small_primes):
     dim = 4
-    T = lambda x: 0.8 * x
-    P = lambda x: x
+
+    def T(x):
+        return 0.8 * x
+
+    def P(x):
+        return x
+
     x0 = np.ones(dim)
 
     op_norm, _ = estimate_operator_norm(T, dim=dim)
     budget = solve_budget(op_norm_T=op_norm, epsilon=0.05)
-    schedule = synthesize_weights(small_primes[:10], dim=dim, op_norm_T=op_norm, q_star=budget.q_star)
+    schedule = synthesize_weights(
+        small_primes[:10], dim=dim, op_norm_T=op_norm, q_star=budget.q_star
+    )
     valid, _ = validate_schedule(schedule, op_norm)
     assert valid
 

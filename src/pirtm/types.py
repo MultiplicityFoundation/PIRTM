@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any
 
-import numpy as np
+if TYPE_CHECKING:
+    import numpy as np
 
 
 @dataclass(slots=True)
@@ -17,7 +18,7 @@ class StepInfo:
     nLam: float
     projected: bool
     residual: float
-    note: Optional[str] = None
+    note: str | None = None
 
 
 @dataclass(slots=True)
@@ -29,7 +30,7 @@ class Status:
     steps: int
     residual: float
     epsilon: float
-    note: Optional[str] = None
+    note: str | None = None
 
 
 @dataclass(slots=True)
@@ -71,7 +72,7 @@ class MonitorRecord:
 
     step: int
     info: StepInfo
-    status: Optional[Status]
+    status: Status | None
 
 
 @dataclass(slots=True)

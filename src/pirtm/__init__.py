@@ -22,64 +22,6 @@ The modules are dependency-light (NumPy only) and pure-Python.
 
 __version__ = "0.1.0dev0"
 
-from .types import (
-    StepInfo,
-    Status,
-    Certificate,
-    PETCReport,
-    PETCEntry,
-    MonitorRecord,
-    WeightSchedule,
-    CSCBudget,
-    CSCMargin,
-)
-from .recurrence import step, run
-from .projection import (
-    project_parameters_soft,
-    project_parameters_weighted_l1,
-)
-from .certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
-from .fixed_point import fixed_point_estimate
-from .adaptive import AdaptiveMargin
-from .petc import PETCLedger, petc_invariants
-from .infinite_prime import infinite_prime_check
-from .monitor import Monitor
-from .weights import synthesize_weights, validate_schedule
-from .gain import estimate_operator_norm, build_gain_sequence, check_iss_compatibility
-from .csc import solve_budget, compute_margin, multi_step_margin, sensitivity
-from .integrations import drmm_step, drmm_evolve
-from .gate import EmissionGate, EmissionPolicy, GatedOutput, gated_run
-from .telemetry import (
-    TelemetryEvent,
-    TelemetrySink,
-    NullSink,
-    MemorySink,
-    FileSink,
-    CallbackSink,
-    AlertRule,
-    TelemetryBus,
-    projection_rate_alert,
-    q_divergence_alert,
-)
-from .audit import AuditEvent, AuditChain
-from .qari import QARIConfig, QARISession
-from .integrations import DRMMInferenceLoop
-from .csl import (
-    CSLVerdict,
-    SilenceEvent,
-    neutrality_check,
-    beneficence_check,
-    silence_clause,
-    commutation_check,
-    evaluate_csl,
-)
-from .csl_gate import CSLGatedOutput, CSLEmissionGate
-from .spectral_decomp import spectral_decomposition, spectral_entropy, phase_coherence, analyze_tensor
-from .spectral_gov import SpectralReport, SpectralGovernor
-from .orchestrator import SessionDescriptor, AggregatedCertificate, SessionSnapshot, SessionOrchestrator
-from .lambda_bridge import LambdaTraceEvent, SubmissionReceipt, LambdaTraceBridge
-from .petc_bridge import PETCAllocation, PETCAllocator
-from .transpiler import TranspileResult, TranspileSpec, transpile
 from .ace import (
     AceBudget,
     AceBudgetState,
@@ -89,6 +31,73 @@ from .ace import (
     AceWitness,
     CertLevel,
 )
+from .adaptive import AdaptiveMargin
+from .audit import AuditChain, AuditEvent
+from .certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
+from .csc import compute_margin, multi_step_margin, sensitivity, solve_budget
+from .csl import (
+    CSLVerdict,
+    SilenceEvent,
+    beneficence_check,
+    commutation_check,
+    evaluate_csl,
+    neutrality_check,
+    silence_clause,
+)
+from .csl_gate import CSLEmissionGate, CSLGatedOutput
+from .fixed_point import fixed_point_estimate
+from .gain import build_gain_sequence, check_iss_compatibility, estimate_operator_norm
+from .gate import EmissionGate, EmissionPolicy, GatedOutput, gated_run
+from .infinite_prime import infinite_prime_check
+from .integrations import DRMMInferenceLoop, drmm_evolve, drmm_step
+from .lambda_bridge import LambdaTraceBridge, LambdaTraceEvent, SubmissionReceipt
+from .monitor import Monitor
+from .orchestrator import (
+    AggregatedCertificate,
+    SessionDescriptor,
+    SessionOrchestrator,
+    SessionSnapshot,
+)
+from .petc import PETCLedger, petc_invariants
+from .petc_bridge import PETCAllocation, PETCAllocator
+from .projection import (
+    project_parameters_soft,
+    project_parameters_weighted_l1,
+)
+from .qari import QARIConfig, QARISession
+from .recurrence import run, step
+from .spectral_decomp import (
+    analyze_tensor,
+    phase_coherence,
+    spectral_decomposition,
+    spectral_entropy,
+)
+from .spectral_gov import SpectralGovernor, SpectralReport
+from .telemetry import (
+    AlertRule,
+    CallbackSink,
+    FileSink,
+    MemorySink,
+    NullSink,
+    TelemetryBus,
+    TelemetryEvent,
+    TelemetrySink,
+    projection_rate_alert,
+    q_divergence_alert,
+)
+from .transpiler import TranspileResult, TranspileSpec, transpile
+from .types import (
+    Certificate,
+    CSCBudget,
+    CSCMargin,
+    MonitorRecord,
+    PETCEntry,
+    PETCReport,
+    Status,
+    StepInfo,
+    WeightSchedule,
+)
+from .weights import synthesize_weights, validate_schedule
 
 __all__ = [
     "StepInfo",

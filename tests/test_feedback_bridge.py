@@ -16,7 +16,9 @@ def test_drmm_inference_loop_evolve_and_run():
     X0 = np.ones(3)
     Xi = 0.2 * np.eye(3)
     Lam = 0.2 * np.eye(3)
-    T = lambda x: 0.8 * x
+
+    def T(x):
+        return 0.8 * x
 
     X_next, out = loop.evolve(X0, Xi, Lam, T)
     assert X_next.shape == X0.shape

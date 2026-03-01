@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from ..telemetry import AceTelemetry
+from typing import TYPE_CHECKING
+
 from ..types import AceCertificate, CertLevel
 from .l2_poweriter import certify_l2
+
+if TYPE_CHECKING:
+    from ..telemetry import AceTelemetry
 
 
 def certify_l3(

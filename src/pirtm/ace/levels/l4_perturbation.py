@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from ..telemetry import AceTelemetry
+from typing import TYPE_CHECKING
+
 from ..types import AceCertificate, CertLevel
 from .l3_nonexpansive import certify_l3
+
+if TYPE_CHECKING:
+    from ..telemetry import AceTelemetry
 
 
 def certify_l4(
@@ -20,7 +24,9 @@ def certify_l4(
     perturb_bound = float(telemetry.designed_perturbation_bound)
     lipschitz_upper = float(base.lipschitz_upper)
     gap_lb = 1.0 - lipschitz_upper
-    tail_bound = float("inf") if gap_lb <= 0 else float(telemetry.disturbance_norm) / max(1e-12, gap_lb)
+    tail_bound = (
+        float("inf") if gap_lb <= 0 else float(telemetry.disturbance_norm) / max(1e-12, gap_lb)
+    )
 
     return AceCertificate(
         level=CertLevel.L4_PERTURBATION,

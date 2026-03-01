@@ -4,9 +4,12 @@ import hashlib
 import json
 import time
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING
 
-from .audit import AuditChain
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from .audit import AuditChain
 
 
 @dataclass(frozen=True)
@@ -88,7 +91,9 @@ class LambdaTraceBridge:
         hashes = [event.chain_hash for event in self._pending]
         merkle_root = self._compute_merkle_root(hashes)
         poseidon_merkle_root = self._compute_poseidon_merkle_root(hashes)
-        batch_id = hashlib.sha256(f"{self.session_id}:{merkle_root}:{time.time()}".encode("utf-8")).hexdigest()[:16]
+        batch_id = hashlib.sha256(
+            f"{self.session_id}:{merkle_root}:{time.time()}".encode()
+        ).hexdigest()[:16]
 
         payload = [
             {
@@ -138,7 +143,7 @@ class LambdaTraceBridge:
 
     @staticmethod
     def _poseidon_compat_hash(value: str) -> str:
-        return hashlib.sha256(f"poseidon:{value}".encode("utf-8")).hexdigest()
+        return hashlib.sha256(f"poseidon:{value}".encode()).hexdigest()
 
     @classmethod
     def _compute_poseidon_merkle_root(cls, hashes: list[str]) -> str:

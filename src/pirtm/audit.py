@@ -3,9 +3,11 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass
+from typing import TYPE_CHECKING
 
-from .ace.types import AceCertificate
-from .types import Certificate, StepInfo
+if TYPE_CHECKING:
+    from .ace.types import AceCertificate
+    from .types import Certificate, StepInfo
 
 
 @dataclass(frozen=True)
@@ -80,7 +82,9 @@ class AuditChain:
             recomputed_event_hash = hashlib.sha256(event.payload_json.encode("utf-8")).hexdigest()
             if recomputed_event_hash != event.event_hash:
                 return False
-            expected_chain_hash = hashlib.sha256((head + event.event_hash).encode("utf-8")).hexdigest()
+            expected_chain_hash = hashlib.sha256(
+                (head + event.event_hash).encode("utf-8")
+            ).hexdigest()
             if expected_chain_hash != event.chain_hash:
                 return False
             head = event.chain_hash

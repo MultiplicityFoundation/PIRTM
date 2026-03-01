@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import time
+from typing import TYPE_CHECKING
 
-from pirtm.audit import AuditChain
+if TYPE_CHECKING:
+    from pirtm.audit import AuditChain
 
-from .spec import TranspileSpec
+    from .spec import TranspileSpec
 
 
 def bind_identity(audit: AuditChain, spec: TranspileSpec) -> None:

@@ -5,7 +5,7 @@ import json
 import time
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -19,9 +19,11 @@ from pirtm.types import Certificate
 
 from ..identity import bind_identity
 from ..models import TranspileResult
-from ..spec import TranspileSpec
 from ..witness import build_witness
 from .computation import _build_computation_mapping, _is_prime, _validate_descriptor, _vector
+
+if TYPE_CHECKING:
+    from ..spec import TranspileSpec
 
 
 def _emission_policy(value: str) -> EmissionPolicy:
@@ -72,7 +74,9 @@ def _collect_dependencies(step: dict[str, Any], dep_map: dict[str, list[str]]) -
     return [str(item) for item in dep_map.get(step_id, [])]
 
 
-def _topological_order(steps: list[dict[str, Any]], dep_map: dict[str, list[str]]) -> list[dict[str, Any]]:
+def _topological_order(
+    steps: list[dict[str, Any]], dep_map: dict[str, list[str]]
+) -> list[dict[str, Any]]:
     by_id: dict[str, dict[str, Any]] = {}
     for step in steps:
         step_id = str(step.get("id", "")).strip()
@@ -156,7 +160,9 @@ def transpile_workflow(spec: TranspileSpec) -> TranspileResult:
         step_payload["steps"] = step_count
         _validate_descriptor(step_payload)
 
-        Xi_seq, Lam_seq, G_seq, T, _, _ = _build_computation_mapping(step_payload, step_dim, step_count)
+        Xi_seq, Lam_seq, G_seq, T, _, _ = _build_computation_mapping(
+            step_payload, step_dim, step_count
+        )
         initial_state = _vector(step_payload.get("initial_state"), step_dim, default=1.0)
 
         adaptive_enabled = bool(step_payload.get("adaptive", True))
@@ -176,7 +182,7 @@ def transpile_workflow(spec: TranspileSpec) -> TranspileResult:
 
         x_state = initial_state.copy()
         step_traj = [x_state.copy()]
-        for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq):
+        for Xi_t, Lam_t, G_t in zip(Xi_seq, Lam_seq, G_seq, strict=False):
             out = session.step(x_state, Xi_t, Lam_t, T, G_t)
             x_state = out.X_next
             step_traj.append(x_state.copy())
@@ -190,9 +196,13 @@ def transpile_workflow(spec: TranspileSpec) -> TranspileResult:
         assigned_prime_raw = step_payload.get("prime_index", default_primes[index])
         assigned_prime = int(assigned_prime_raw)
         if not _is_prime(assigned_prime):
-            raise ValueError(f"workflow step '{step_id}' has non-prime prime_index={assigned_prime}")
+            raise ValueError(
+                f"workflow step '{step_id}' has non-prime prime_index={assigned_prime}"
+            )
         cert_hash = hashlib.sha256(
-            json.dumps(asdict(cert), sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+            json.dumps(asdict(cert), sort_keys=True, separators=(",", ":"), default=str).encode(
+                "utf-8"
+            )
         ).hexdigest()
         ledger.append(
             assigned_prime,
@@ -241,9 +251,15 @@ def transpile_workflow(spec: TranspileSpec) -> TranspileResult:
 
     compliance = ConformanceResult(profile="workflow")
     compliance.record("dependency_ordering", True, f"steps={len(ordered_steps)}")
-    compliance.record("all_steps_executed", len(session_ids) == len(ordered_steps), f"executed={len(session_ids)}")
-    compliance.record("all_certified", aggregated.all_certified, f"sessions={len(aggregated.session_ids)}")
-    compliance.record("petc_satisfied", petc_report.satisfied, f"chain_length={petc_report.chain_length}")
+    compliance.record(
+        "all_steps_executed", len(session_ids) == len(ordered_steps), f"executed={len(session_ids)}"
+    )
+    compliance.record(
+        "all_certified", aggregated.all_certified, f"sessions={len(aggregated.session_ids)}"
+    )
+    compliance.record(
+        "petc_satisfied", petc_report.satisfied, f"chain_length={petc_report.chain_length}"
+    )
 
     bridge = LambdaTraceBridge(session_id=f"transpile:{spec.prime_index}:workflow")
     lambda_events = [asdict(event) for event in bridge.translate(orchestrator.master_audit)]

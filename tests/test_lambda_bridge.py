@@ -62,7 +62,9 @@ def test_batch_submit_calls_submit_fn_and_merkle_handles_odd():
     assert isinstance(called["payload"], list)
 
     merkle = LambdaTraceBridge._compute_merkle_root(["a" * 64, "b" * 64, "c" * 64])
-    poseidon_merkle = LambdaTraceBridge._compute_poseidon_merkle_root(["a" * 64, "b" * 64, "c" * 64])
+    poseidon_merkle = LambdaTraceBridge._compute_poseidon_merkle_root(
+        ["a" * 64, "b" * 64, "c" * 64]
+    )
     assert isinstance(merkle, str)
     assert len(merkle) == 64
     assert isinstance(poseidon_merkle, str)

@@ -12,11 +12,12 @@ Phase 1 migration status:
     `pirtm.spectral_decomp.analyze_tensor`.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
-from sympy import primerange
+import numpy as np
+
 from pirtm._legacy import PrimeTensorSystem
 from pirtm.spectral_decomp import analyze_tensor
+
 
 def generate_superposition(prime_tensor_sys, num_terms=50):
     """
@@ -43,6 +44,7 @@ def generate_superposition(prime_tensor_sys, num_terms=50):
 
     return interference_matrix
 
+
 def simulate_peoh_spectrum(prime_tensor_sys, num_terms=50):
     """
     Visualize eigenvalue interference spectrum from prime superposition.
@@ -58,15 +60,16 @@ def simulate_peoh_spectrum(prime_tensor_sys, num_terms=50):
     eigvals, _ = np.linalg.eig(interference_matrix)
 
     plt.figure(figsize=(6, 6))
-    plt.scatter(eigvals.real, eigvals.imag, alpha=0.8, c='darkred')
+    plt.scatter(eigvals.real, eigvals.imag, alpha=0.8, c="darkred")
     plt.title("Simulated Interference Spectrum (Ξ_ζ(s))")
     plt.xlabel("Re(λ)")
     plt.ylabel("Im(λ)")
     plt.grid(True)
-    plt.axvline(x=0.5, color='blue', linestyle='--', label="Critical Line")
+    plt.axvline(x=0.5, color="blue", linestyle="--", label="Critical Line")
     plt.legend()
-    plt.axis('equal')
+    plt.axis("equal")
     plt.show()
+
 
 def peoh_diagnostics(prime_tensor_sys, num_terms=50):
     """
@@ -81,19 +84,20 @@ def peoh_diagnostics(prime_tensor_sys, num_terms=50):
     interference_matrix = generate_superposition(prime_tensor_sys, num_terms)
     analysis = analyze_tensor(interference_matrix)
     return {
-        'spectral_entropy': analysis['entropy'],
-        'phase_coherence': analysis['coherence'],
-        'eigvals': analysis['eigvals']
+        "spectral_entropy": analysis["entropy"],
+        "phase_coherence": analysis["coherence"],
+        "eigvals": analysis["eigvals"],
     }
+
 
 if __name__ == "__main__":
     print("Initializing PIRTM tensor system...")
     pts = PrimeTensorSystem(dim=6, num_primes=80)
-    
+
     print("Simulating Prime Eigenvalue Interference (PEOH)...")
     simulate_peoh_spectrum(pts, num_terms=60)
 
     print("Running diagnostics...")
     results = peoh_diagnostics(pts, num_terms=60)
-    print("Spectral Entropy:", results['spectral_entropy'])
-    print("Phase Coherence:", results['phase_coherence'])
+    print("Spectral Entropy:", results["spectral_entropy"])
+    print("Phase Coherence:", results["phase_coherence"])
