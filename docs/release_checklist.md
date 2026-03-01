@@ -1,5 +1,34 @@
 # Release Checklist
 
+## Release Gate Matrix (R8 Canonical)
+
+This matrix defines which checks are required for a release-candidate commit on `Multiplicity`.
+
+| Gate | Workflow | Job / Command | Required | Owner | Escalation |
+|---|---|---|---|---|---|
+| Lint | `.github/workflows/ci.yml` | `lint` (`ruff check`, `ruff format --check`) | Yes | CI/quality owner | Open `release-blocker` issue and notify Track D lead |
+| Type-check | `.github/workflows/ci.yml` | `typecheck` (`mypy src/pirtm/`) | Yes | CI/quality owner | Open `release-blocker` issue and notify Track D lead |
+| Unit/integration tests | `.github/workflows/ci.yml` | `test` matrix (3.11, 3.12, 3.13) | Yes | Track A lead | Open `release-blocker` issue and assign module owner |
+| Conformance profile | Manual pre-release + nightly | `pirtm-conformance --profile all --output text` | Yes | Conformance owner | Block tag until passing evidence is attached |
+| Build validity | Release checklist + `release.yml` | `python -m build`, `python -m twine check dist/*` | Yes | Release manager | Block tag and assign packaging owner |
+| Release artifact publish | `.github/workflows/release.yml` | `build`, `publish`, `github-release` | Yes (tagged release) | Release manager | Roll back tag/release candidate and triage |
+| Nightly regression | `.github/workflows/nightly.yml` | `nightly` matrix | No (release gate), signal-only | CI/quality owner | File follow-up issue unless it reflects release blocker class |
+| Optional supply chain extras | Local/manual | `make sbom`, `make sign`, `make verify` | No (recommended) | Security/release owner | Track in follow-up if omitted |
+
+### Critical Suite Coverage Policy
+
+- ACE and transpiler critical suites must not be skipped by path filters for release-relevant changes.
+- Minimum required CLI/transpiler coverage includes `tests/test_cli_transpile.py` and `tests/test_transpiler.py` through the required `test` matrix.
+- Required checks are enforced via CI job status plus manual release-checklist confirmation for conformance/build gates.
+
+### Flaky/Failure Triage Policy
+
+1. Classify failures as one of: deterministic regression, infrastructure transient, or flaky test.
+2. Any deterministic regression is an automatic release blocker until fixed.
+3. Infrastructure transients may be retried once; repeated failure becomes blocker and must be tracked.
+4. Flaky tests require owner assignment and stabilization plan; release can proceed only if failure is proven non-scope and waived by Track A lead plus release manager.
+5. Every waived gate must be documented in release evidence with rationale and follow-up issue.
+
 ## Pre-release
 
 - [ ] Ensure branch is up to date with `main`

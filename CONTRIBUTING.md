@@ -32,6 +32,7 @@ Examples:
 - Keep PRs focused and reviewable.
 - Include rationale for invariant-sensitive changes.
 - Add/adjust tests for every behavior change.
+- Release-gate expectations are defined in `docs/release_checklist.md` under “Release Gate Matrix (R8 Canonical)”.
 - Ensure local checks pass:
 
 ```bash
