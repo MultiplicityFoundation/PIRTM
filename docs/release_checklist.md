@@ -25,6 +25,8 @@ This matrix defines which checks are required for a release-candidate commit on 
 	- `tests/test_ace_protocol.py`
 	- `tests/test_ace_protocol_injection.py`
 	- `tests/test_ace_matrix_immutability.py`
+	- `tests/test_simulations_modernized.py`
+- Legacy-classified research simulation paths (currently `src/pirtm/simulations/riemann_verification.py`) are non-blocking for release gates until promoted out of research-only scope.
 - Required checks are enforced via CI job status plus manual release-checklist confirmation for conformance/build gates.
 
 ### Flaky/Failure Triage Policy

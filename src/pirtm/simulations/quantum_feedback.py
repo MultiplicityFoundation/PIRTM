@@ -18,9 +18,9 @@ class QuantumFeedbackSimulator:
     Models dynamic recursive evolution of Ξ(t) with quantum-inspired feedback.
     """
 
-    def __init__(self, dim=4, num_primes=50, Lambda_m=0.9):
+    def __init__(self, dim=4, num_primes=50, Lambda_m=0.9, seed=None):
         self.Lambda_m = Lambda_m
-        self.pts = PrimeTensorBank(dim=dim, num_primes=num_primes)
+        self.pts = PrimeTensorBank(dim=dim, num_primes=num_primes, seed=seed)
         self.Xi = self.pts.state
         self.history = [self.Xi.copy()]
         self.feedback_history = []

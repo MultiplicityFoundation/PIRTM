@@ -49,7 +49,8 @@ jobs:
             tests/test_transpiler.py \
             tests/test_ace_protocol.py \
             tests/test_ace_protocol_injection.py \
-            tests/test_ace_matrix_immutability.py
+            tests/test_ace_matrix_immutability.py \
+            tests/test_simulations_modernized.py
 
   test:
     name: Test (pytest) — Python ${{ matrix.python-version }}
