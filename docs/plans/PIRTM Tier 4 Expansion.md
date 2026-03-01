@@ -108,11 +108,11 @@ sensitivity, and PETC chain validation over prime-indexed events.
 
 ## Documentation
 
-- [API Reference](docs/api/README.md)
-- [Architecture](docs/architecture.md)
-- [Mathematical Specification](docs/math_spec.md)
-- [Quickstart Notebook](examples/quickstart.ipynb)
-- [Full Pipeline Notebook](examples/full_pipeline.ipynb)
+- [API Reference](../api/README.md)
+- [Architecture](../architecture.md)
+- [Mathematical Specification](../math_spec.md)
+- [Quickstart Example](../../examples/quickstart.py)
+- [Full Pipeline Example](../../examples/full_pipeline.py)
 
 ## Development
 
@@ -142,7 +142,7 @@ Maintained by Citizen Gardens / Multiplicity Foundation
 The current README's theory content is valuable but belongs in `docs/theory/README.md`, not in the package README. The PR:
 
 1. Creates `docs/theory/` and moves the current README body into `docs/theory/overview.md`
-2. Adds a link from the new README: "For the broader Multiplicity Theory context, see [Theory Overview](docs/theory/overview.md)"
+2. Adds a link from the new README: "For the broader Multiplicity Theory context, see [Theory Overview](../extensions/primer.md)"
 3. Existing `docs/primer.md`, `docs/moonshine.md`, etc. move into `docs/theory/` alongside it
 4. No content is deleted — only reorganized
 

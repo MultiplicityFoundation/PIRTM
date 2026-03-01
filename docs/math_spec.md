@@ -1,5 +1,8 @@
 # PIRTM Mathematical Specification
 
+This document is an implementation-oriented mathematical reference for `pirtm`.
+The normative language definition is `docs/PIRTM_LANGUAGE_SPEC.md`.
+
 ## Contractive Recurrence
 
 Implemented by `pirtm.recurrence.step`:

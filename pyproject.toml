@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pirtm"
-version = "0.1.0dev0"
+version = "0.1.0"
 description = "Prime-Indexed Recursive Tensor Mathematics — certified contractive core"
 readme = "README.md"
 license = "MIT"
@@ -15,7 +15,7 @@ authors = [
 ]
 keywords = ["tensor", "prime", "contraction", "spectral", "multiplicity"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",

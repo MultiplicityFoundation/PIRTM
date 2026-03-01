@@ -1,5 +1,11 @@
 # PIRTM API Reference
 
+## Public API Boundary (`v0.1.0`)
+
+- Public/stable package API for `v0.1.0` is the documented `pirtm` top-level surface and module APIs listed in this reference.
+- Transitional modules under `pirtm._legacy` are deprecated compatibility paths and are excluded from stable API guarantees.
+- Repository directories `frontend/`, `notebooks/`, and `papers/` are out of Python package API scope for `v0.1.0`.
+
 ## Core Types (`pirtm.types`)
 
 ### `StepInfo`

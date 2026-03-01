@@ -37,6 +37,42 @@ This matrix defines which checks are required for a release-candidate commit on 
 4. Flaky tests require owner assignment and stabilization plan; release can proceed only if failure is proven non-scope and waived by Track A lead plus release manager.
 5. Every waived gate must be documented in release evidence with rationale and follow-up issue.
 
+## PR-B Evidence Snapshot (2026-03-01)
+
+### Workflow/Job Inventory (from repository workflows)
+
+- CI workflow (`.github/workflows/ci.yml`) defines required-gate jobs:
+	- `Lint (ruff)`
+	- `Type-check (mypy)`
+	- `Critical suites (ACE + transpiler)`
+	- `Test (pytest) — Python 3.11`
+	- `Test (pytest) — Python 3.12`
+	- `Test (pytest) — Python 3.13`
+- Nightly workflow (`.github/workflows/nightly.yml`) remains signal-only for release gate purposes.
+- Release workflow (`.github/workflows/release.yml`) enforces `gate -> build -> publish/github-release` sequencing for tags.
+
+### GitHub Run Evidence
+
+- Successful CI run with full job success set:
+	- Run `22536756530`: https://github.com/MultiplicityFoundation/PIRTM/actions/runs/22536756530
+- Latest failed CI run (before lint fix) identified root cause in required lint job:
+	- Run `22545781480`: `Lint (ruff)` failed at `ruff check src/ tests/`.
+	- URL: https://github.com/MultiplicityFoundation/PIRTM/actions/runs/22545781480
+
+### Local Gate Evidence (post-fix)
+
+- `ruff check src tests` -> pass
+- `ruff format --check src tests` -> pass
+- `mypy src/pirtm` -> pass
+- `pytest -q` -> pass (`181 passed`)
+
+### Required-Checks Enforcement Verification
+
+- Attempted to fetch branch protection/required status checks via:
+	- `gh api repos/MultiplicityFoundation/PIRTM/branches/Multiplicity/protection`
+- Result: `403 Resource not accessible by integration` with current token scope.
+- Action required: repository maintainer/admin must confirm in GitHub branch protection settings that the CI jobs listed above are marked as required checks on `Multiplicity`.
+
 ## Pre-release
 
 - [ ] Ensure release branch is up to date with `Multiplicity`

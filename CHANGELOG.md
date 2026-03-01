@@ -16,13 +16,14 @@ All notable changes to this project are documented in this file.
 ### Fixed
 - Placeholder for post-`v0.1.0` development entries.
 
-## [0.1.0] - YYYY-MM-DD
+## [0.1.0] - 2026-03-01
 
-### Release Scope Note (`v0.1.0` draft)
+### Release Scope Note (`v0.1.0`)
 - Scope lock is tracked in `docs/plans/PIRTM Core Completion.md` under “Release Scope: v0.1.0 (Scope Lock Draft)”.
 - `v0.1.0` is treated as a public-facing semantic-version promise for explicitly in-scope surfaces.
 - In-scope release gating requires: CI green on scoped modules, enforced/tested L0 invariants, and no unowned release blockers.
 - Out-of-scope items for this cut include MCP/agent integrations, UI surfaces, Terraform/cloud provisioning, and non-blocking cross-repo integrations.
+- Repository directories `frontend/`, `notebooks/`, and `papers/` are explicitly out of package release scope for `v0.1.0` and are not part of the `pirtm` public API/stability contract.
 - `R1` scope lock unblocks `R2` (release notes), `R3` (release execution), and `R8` (release gate matrix).
 
 ### Added

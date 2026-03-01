@@ -11,6 +11,7 @@
 |---|---|---|
 | `PIRTM Core Completion.md` | **Active** | Canonical roadmap for current release and modernization work |
 | `issue-drafts/` | **Active** | Actionable execution backlog aligned to active roadmap |
+| `PIRTM Language Specification` pointer | **Pointer** | Canonical normative spec is `docs/PIRTM_LANGUAGE_SPEC.md` |
 | `PIRTM Transpiler Spec.md` | **Reference** | Living technical spec; implementation may evolve by release track decisions |
 | Spectral boundary (`pirtm.spectral_decomp`) | **Active Policy** | Supported public API for `v0.1.x`; `_legacy` spectral paths are transition-only |
 | `PIRTM Tier 1 Expansion.md` | **Historical** | Superseded by active roadmap and issue-draft execution model |

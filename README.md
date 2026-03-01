@@ -178,10 +178,18 @@ print("petc_bridge:", tagged[0], ordering)
 - Plans status + support matrix: `docs/plans/README.md`
 - API reference: `docs/api/README.md`
 - Architecture guide: `docs/architecture.md`
-- Mathematical spec: `docs/math_spec.md`
+- PIRTM Language Specification (Normative): `docs/PIRTM_LANGUAGE_SPEC.md`
+- PIRTM Mathematical Specification (Implementation Reference): `docs/math_spec.md`
 - Examples index: `examples/README.md` (includes transpiler descriptor usage and `--emit-witness` / `--emit-lambda-events` JSON output gating notes)
-- Release notes: `CHANGELOG.md` (`v0.1.0` draft section)
+- Test guide: `tests/README.md`
+- Release notes: `CHANGELOG.md` (`v0.1.0` section)
 - Migration notes: `docs/migration/v0.1.0.md` and `docs/migration/certify-v1.md`
+
+## Release Scope (`v0.1.0`)
+
+- The `v0.1.0` package scope and stability contract apply to the Python library under `src/pirtm` and documented CLI surfaces.
+- Repository directories `frontend/`, `notebooks/`, and `papers/` are out of package release scope for `v0.1.0` and are not covered by the `pirtm` public API contract.
+- Legacy internals under `pirtm._legacy` remain transitional/deprecated and are excluded from stable API guarantees.
 
 ## Development
 

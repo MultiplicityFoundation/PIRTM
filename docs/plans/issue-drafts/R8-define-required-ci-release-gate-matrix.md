@@ -35,6 +35,9 @@ CI workflows exist, but release criteria are not codified as an explicit gate co
 - Added owner and escalation columns to make blocker handling explicit.
 - Added critical-suite policy (ACE/transpiler coverage) and flaky/failure triage workflow.
 - Added cross-link to matrix from `CONTRIBUTING.md`.
+- PR-B evidence snapshot added to `docs/release_checklist.md` with workflow/job inventory, GitHub run links, and local gate results.
+- Local gate rerun passed after lint fix (`ruff check`, `ruff format --check`, `mypy`, `pytest`).
+- Branch-protection required-check API query returned `403` for integration token; admin-side UI confirmation remains required.
 
 ## Out of Scope
 

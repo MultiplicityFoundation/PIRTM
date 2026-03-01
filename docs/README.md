@@ -7,7 +7,8 @@
 - Release notes: `CHANGELOG.md`
 - Migration notes: `docs/migration/v0.1.0.md`, `docs/migration/certify-v1.md`
 - Architecture guide: `docs/architecture.md`
-- Mathematical specification: `docs/math_spec.md`
+- PIRTM Language Specification (Normative): `docs/PIRTM_LANGUAGE_SPEC.md`
+- PIRTM Mathematical Specification (Implementation Reference): `docs/math_spec.md`
 - API reference: `docs/api/README.md`
 
 

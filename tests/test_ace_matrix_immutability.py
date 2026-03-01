@@ -1,8 +1,7 @@
 import numpy as np
 import pytest
 
-from pirtm.ace.contracts import assert_matrix_not_mutated
-from pirtm.ace.contracts import _matrix_fingerprint
+from pirtm.ace.contracts import _matrix_fingerprint, assert_matrix_not_mutated
 from pirtm.ace.levels import certify_l2, certify_l3, certify_l4
 from pirtm.ace.telemetry import AceTelemetry
 
@@ -74,6 +73,8 @@ def test_l4_does_not_mutate_contraction_matrix():
 
 def test_matrix_guard_raises_on_in_place_mutation_when_debug_enabled():
     matrix = _base_matrix()
-    with pytest.raises(AssertionError, match="NO_MATRIX_MUTATION VIOLATED"):
-        with assert_matrix_not_mutated(matrix, "TEST"):
-            matrix[0, 0] = 999.0
+    with (
+        pytest.raises(AssertionError, match="NO_MATRIX_MUTATION VIOLATED"),
+        assert_matrix_not_mutated(matrix, "TEST"),
+    ):
+        matrix[0, 0] = 999.0

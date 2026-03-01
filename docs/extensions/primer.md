@@ -74,9 +74,9 @@ This unlocks further application in:
 
 ## 📚 Suggested Reading
 
-- [PIRTM README](../README.md)
-- [Advancements in Quantum Feedback](../docs/advancements.md)
-- [Riemann Convergence Simulations](../notebooks/riemann_verification.ipynb)
+- [PIRTM README](../../README.md)
+- [Advancements in Quantum Feedback](../../docs/extensions/moonshine.md)
+- [Riemann Convergence Simulations](../../notebooks/README.md)
 
 ---
 
