@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import date
 import re
 import subprocess
 from pathlib import Path
@@ -47,7 +48,12 @@ def load_current_version() -> str:
 
 
 def bump(base: str, level: str, prerelease: str | None) -> str:
-    major, minor, patch, _, _ = parse_version(base)
+    major, minor, patch, current_pre, _ = parse_version(base)
+
+    if level == "release":
+        if current_pre is None:
+            raise ValueError("current version is already stable; use major/minor/patch")
+        return format_version((major, minor, patch, None, None))
 
     if level == "major":
         major += 1
@@ -85,16 +91,31 @@ def update_changelog(version: str) -> None:
         CHANGELOG.write_text(text, encoding="utf-8")
 
 
+def finalize_release_date(version: str) -> None:
+    if not CHANGELOG.exists():
+        return
+    text = CHANGELOG.read_text(encoding="utf-8")
+    text = text.replace(f"## [{version}] - YYYY-MM-DD", f"## [{version}] - {date.today().isoformat()}")
+    CHANGELOG.write_text(text, encoding="utf-8")
+
+
 def git_tag(version: str) -> None:
     subprocess.run(["git", "tag", f"v{version}"], cwd=ROOT, check=True)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Bump package version across project files.")
-    parser.add_argument("level", choices=["major", "minor", "patch"], help="SemVer part to bump")
+    parser.add_argument(
+        "level",
+        choices=["major", "minor", "patch", "release"],
+        help="SemVer operation to apply",
+    )
     parser.add_argument("--pre", choices=["a", "b", "rc"], default=None, help="Prerelease marker")
     parser.add_argument("--tag", action="store_true", help="Create git tag v<version>")
     args = parser.parse_args()
+
+    if args.level == "release" and args.pre is not None:
+        raise ValueError("--pre cannot be used with release level")
 
     current = load_current_version()
     target = bump(current, args.level, args.pre)
@@ -102,6 +123,8 @@ def main() -> None:
     replace_version(PYPROJECT, current, target)
     replace_version(INIT, current, target)
     update_changelog(target)
+    if args.level == "release":
+        finalize_release_date(target)
 
     if args.tag:
         git_tag(target)

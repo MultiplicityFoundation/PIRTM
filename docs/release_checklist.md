@@ -39,7 +39,7 @@ This matrix defines which checks are required for a release-candidate commit on 
 
 ## Pre-release
 
-- [ ] Ensure branch is up to date with `main`
+- [ ] Ensure release branch is up to date with `Multiplicity`
 - [ ] Run `ruff check src tests`
 - [ ] Run `mypy src`
 - [ ] Run `pytest -q`
@@ -48,10 +48,11 @@ This matrix defines which checks are required for a release-candidate commit on 
 
 ## Versioning
 
-- [ ] Bump version: `python scripts/bump_version.py patch`
+- [ ] If releasing from prerelease (`*dev*`/`*rc*`), run `python scripts/bump_version.py release --tag`
+- [ ] Otherwise bump SemVer (`major`/`minor`/`patch`) with `python scripts/bump_version.py <level> --tag`
 - [ ] Verify version changed in `pyproject.toml` and `src/pirtm/__init__.py`
 - [ ] Commit version + changelog updates
-- [ ] Create tag (`git tag vX.Y.Z`) or run with `--tag`
+- [ ] Create tag (`git tag vX.Y.Z`) if `--tag` was not used
 
 ## Build and Integrity
 
@@ -64,9 +65,11 @@ This matrix defines which checks are required for a release-candidate commit on 
 ## Publish
 
 - [ ] Push commits and tags
-- [ ] Confirm `Release` workflow succeeds
+- [ ] Confirm `Release` workflow succeeds (gate → build → publish/github-release)
+- [ ] For `workflow_dispatch` dry-runs, keep `publish_to_pypi=false`; enable only for approved publish run
 - [ ] Confirm package appears on PyPI
 - [ ] Confirm GitHub release assets are attached
+- [ ] Record release evidence: tag, workflow URL, and `SHA256SUMS` from workflow artifacts
 
 ## Post-release
 
