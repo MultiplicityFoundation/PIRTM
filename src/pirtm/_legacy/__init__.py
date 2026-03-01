@@ -1,10 +1,15 @@
-"""Legacy PIRTM modules — deprecated, will be removed in v0.2.0."""
+"""Legacy PIRTM modules — deprecated transition surface.
+
+Removal target: v0.3.0.
+Use supported top-level APIs under ``pirtm`` for new integrations.
+"""
 
 import warnings as _w
 
 _w.warn(
-    "pirtm._legacy modules are deprecated and will be removed in v0.2.0. "
-    "Use the contractive core (pirtm.recurrence, pirtm.projection, etc.) instead.",
+    "pirtm._legacy modules are deprecated and targeted for removal in v0.3.0. "
+    "Use supported top-level APIs (for example: pirtm.recurrence, "
+    "pirtm.projection, pirtm.spectral_decomp) instead.",
     DeprecationWarning,
     stacklevel=2,
 )

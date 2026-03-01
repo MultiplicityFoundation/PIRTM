@@ -51,6 +51,20 @@ Dependency direction is mostly leafward toward `types`.
 
 Legacy modules are under `pirtm._legacy` with deprecation warning at import and compatibility-only scope.
 
+### Legacy Sunset Timeline (R5)
+
+| Legacy module | Status | Migration target | Removal target |
+|---|---|---|---|
+| `pirtm._legacy.pir_tensor` | Deprecated | `pirtm.recurrence`, `pirtm.projection`, `pirtm.qari` | `v0.3.0` |
+| `pirtm._legacy.recursive_ops` | Deprecated | `pirtm.recurrence`, `pirtm.certify`, `pirtm.gain`, `pirtm.csc` | `v0.3.0` |
+| `pirtm._legacy.spectral_decomp` | Deprecated | `pirtm.spectral_decomp`, `pirtm.spectral_gov` | `v0.3.0` |
+
+Policy:
+
+- `v0.1.x`: deprecated modules remain available with explicit per-module warnings.
+- `v0.2.x`: deprecation messaging tightened and migration guidance emphasized.
+- `v0.3.0`: remove deprecated `_legacy` modules that have supported replacements.
+
 ## Spectral API Boundary Decision (R4)
 
 Decision date: 2026-03-01

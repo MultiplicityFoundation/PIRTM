@@ -47,6 +47,7 @@ All notable changes to this project are documented in this file.
 - `_legacy` surfaces remain deprecated; module-by-module sunset policy and target removal version are tracked in roadmap items `R4` and `R5`.
 - Legacy `Certificate` compatibility path is deprecated in favor of ACE-native certificate typing; see migration notes (`docs/migration/certify-v1.md`).
 - `_legacy` spectral entry points are targeted for sunset in `v0.3.0` (with stricter migration messaging in `v0.2.x`).
+- Per-module legacy deprecation notices now include explicit `v0.3.0` removal target and migration pointers; canonical timeline is documented in `docs/architecture.md`.
 
 ### Fixed
 - CLI tests now assert and protect explicit output-gating behavior for witness and Lambda event payloads.

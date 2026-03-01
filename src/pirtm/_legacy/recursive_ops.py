@@ -1,5 +1,18 @@
-# 📦 recursive_ops.py
-# Recursive Feedback Operators and Stability Checks for PIRTM
+"""Deprecated legacy module: recursive operators and legacy stability checks.
+
+Removal target: v0.3.0.
+Migration path: use supported top-level APIs (`pirtm.recurrence`,
+`pirtm.certify`, `pirtm.gain`, `pirtm.csc`).
+"""
+
+import warnings as _w
+
+_w.warn(
+    "pirtm._legacy.recursive_ops is deprecated and targeted for removal in v0.3.0. "
+    "Prefer pirtm.recurrence / pirtm.certify / pirtm.gain / pirtm.csc.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import numpy as np
 

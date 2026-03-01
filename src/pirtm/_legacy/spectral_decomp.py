@@ -1,5 +1,18 @@
-# 📦 spectral_decomp.py
-# Spectral Analysis of Prime-Indexed Matrices in PIRTM
+"""Deprecated legacy module: spectral decomposition utilities.
+
+Removal target: v0.3.0.
+Migration path: use supported public spectral APIs
+(`pirtm.spectral_decomp`, `pirtm.spectral_gov`).
+"""
+
+import warnings as _w
+
+_w.warn(
+    "pirtm._legacy.spectral_decomp is deprecated and targeted for removal in v0.3.0. "
+    "Use pirtm.spectral_decomp / pirtm.spectral_gov.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import numpy as np
 import matplotlib.pyplot as plt

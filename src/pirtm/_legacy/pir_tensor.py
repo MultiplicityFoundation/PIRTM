@@ -1,5 +1,18 @@
-# 📦 pir_tensor.py
-# Prime-Indexed Recursive Tensor Operations for PIRTM
+"""Deprecated legacy module: prime-indexed tensor operations.
+
+Removal target: v0.3.0.
+Migration path: use supported top-level PIRTM APIs (`pirtm.recurrence`,
+`pirtm.projection`, `pirtm.qari`) for new implementations.
+"""
+
+import warnings as _w
+
+_w.warn(
+    "pirtm._legacy.pir_tensor is deprecated and targeted for removal in v0.3.0. "
+    "Prefer pirtm.recurrence / pirtm.projection / pirtm.qari.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import numpy as np
 from sympy import primerange, nextprime
