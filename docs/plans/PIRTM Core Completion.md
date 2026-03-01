@@ -119,6 +119,8 @@ Current state: legacy code is present under `src/pirtm/_legacy/` with package-le
 
 Current state: simulation scripts under `src/pirtm/simulations/` still import `pirtm._legacy` primitives.
 
+Audit artifact: `docs/plans/simulation_migration_map.md`.
+
 **Deliverables**
 - Migrate simulation modules to contractive-core APIs (`recurrence`, `qari`, `gate`, `certify`) where feasible.
 - For simulations that must remain legacy-backed, mark them as legacy examples and isolate entry points.
