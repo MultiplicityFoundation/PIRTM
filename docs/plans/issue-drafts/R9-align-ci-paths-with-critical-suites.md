@@ -16,17 +16,29 @@ Recent work concentrated in ACE and transpiler surfaces; required CI should enfo
 
 ## Acceptance Criteria
 
-- [ ] Required CI jobs execute ACE critical tests.
-- [ ] Required CI jobs execute transpiler CLI/workflow critical tests.
-- [ ] Path filters or job conditions do not skip critical suites for relevant changes.
-- [ ] Workflow documentation reflects enforced suites.
+- [x] Required CI jobs execute ACE critical tests.
+- [x] Required CI jobs execute transpiler CLI/workflow critical tests.
+- [x] Path filters or job conditions do not skip critical suites for relevant changes.
+- [x] Workflow documentation reflects enforced suites.
 
 ## Implementation Checklist
 
-- [ ] Identify critical test commands and expected duration.
-- [ ] Update `.github/workflows/ci.yml` required jobs/steps.
+- [x] Identify critical test commands and expected duration.
+- [x] Update `.github/workflows/ci.yml` required jobs/steps.
 - [ ] Validate with a PR touching ACE + transpiler files.
-- [ ] Document the critical-suite policy near release gates.
+- [x] Document the critical-suite policy near release gates.
+
+## Completion Notes (2026-03-01)
+
+- Added dedicated `critical-suites` job to `.github/workflows/ci.yml`.
+- Critical suite now explicitly runs ACE + transpiler tests:
+	- `tests/test_cli_transpile.py`
+	- `tests/test_transpiler.py`
+	- `tests/test_ace_protocol.py`
+	- `tests/test_ace_protocol_injection.py`
+	- `tests/test_ace_matrix_immutability.py`
+- CI trigger remains branch-wide for `Multiplicity` push/PR; no path filter currently skips critical suites.
+- Updated `docs/release_checklist.md` gate matrix and critical-suite policy to reference the required `critical-suites` job.
 
 ## Out of Scope
 

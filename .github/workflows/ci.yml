@@ -34,6 +34,23 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: mypy src/pirtm/
 
+  critical-suites:
+    name: Critical suites (ACE + transpiler)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[all]"
+      - run: |
+          pytest -v \
+            tests/test_cli_transpile.py \
+            tests/test_transpiler.py \
+            tests/test_ace_protocol.py \
+            tests/test_ace_protocol_injection.py \
+            tests/test_ace_matrix_immutability.py
+
   test:
     name: Test (pytest) — Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest

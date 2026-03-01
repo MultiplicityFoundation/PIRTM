@@ -8,6 +8,7 @@ This matrix defines which checks are required for a release-candidate commit on 
 |---|---|---|---|---|---|
 | Lint | `.github/workflows/ci.yml` | `lint` (`ruff check`, `ruff format --check`) | Yes | CI/quality owner | Open `release-blocker` issue and notify Track D lead |
 | Type-check | `.github/workflows/ci.yml` | `typecheck` (`mypy src/pirtm/`) | Yes | CI/quality owner | Open `release-blocker` issue and notify Track D lead |
+| ACE/transpiler critical suites | `.github/workflows/ci.yml` | `critical-suites` (targeted pytest suite) | Yes | Track D + Track A leads | Open `release-blocker` issue and assign suite owner |
 | Unit/integration tests | `.github/workflows/ci.yml` | `test` matrix (3.11, 3.12, 3.13) | Yes | Track A lead | Open `release-blocker` issue and assign module owner |
 | Conformance profile | Manual pre-release + nightly | `pirtm-conformance --profile all --output text` | Yes | Conformance owner | Block tag until passing evidence is attached |
 | Build validity | Release checklist + `release.yml` | `python -m build`, `python -m twine check dist/*` | Yes | Release manager | Block tag and assign packaging owner |
@@ -17,8 +18,13 @@ This matrix defines which checks are required for a release-candidate commit on 
 
 ### Critical Suite Coverage Policy
 
-- ACE and transpiler critical suites must not be skipped by path filters for release-relevant changes.
-- Minimum required CLI/transpiler coverage includes `tests/test_cli_transpile.py` and `tests/test_transpiler.py` through the required `test` matrix.
+- ACE and transpiler critical suites must not be skipped by path filters or conditional job logic on release-relevant changes.
+- Required `critical-suites` CI job must execute at least:
+	- `tests/test_cli_transpile.py`
+	- `tests/test_transpiler.py`
+	- `tests/test_ace_protocol.py`
+	- `tests/test_ace_protocol_injection.py`
+	- `tests/test_ace_matrix_immutability.py`
 - Required checks are enforced via CI job status plus manual release-checklist confirmation for conformance/build gates.
 
 ### Flaky/Failure Triage Policy
