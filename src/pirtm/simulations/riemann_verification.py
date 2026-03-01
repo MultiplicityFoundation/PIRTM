@@ -3,6 +3,10 @@
 This module remains non-core because it still depends on
 `pirtm._legacy.PrimeTensorSystem` for prime-indexed tensor generation.
 
+Isolation policy:
+- Keep this module research-only (not part of release-critical simulation surface).
+- Do not use this module as a dependency for production/runtime pathways.
+
 Phase 1 migration status:
 - migrated off legacy spectral analysis import to
     `pirtm.spectral_decomp.analyze_tensor`.

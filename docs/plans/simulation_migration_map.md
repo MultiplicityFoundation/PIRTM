@@ -10,9 +10,9 @@ Audits `src/pirtm/simulations/*.py` for `_legacy` dependencies and defines migra
 
 | Module | `_legacy` imports found | Current classification | Recommended path |
 |---|---|---|---|
-| `src/pirtm/simulations/qari_module.py` | `PrimeTensorSystem`, `recursive_update` | Legacy-backed (non-core) | **Migrate** to core recurrence + spectral APIs |
-| `src/pirtm/simulations/quantum_feedback.py` | `PrimeTensorSystem`, `recursive_update`, `feedback_operator`, `analyze_tensor` | Legacy-backed (non-core) | **Migrate** to core recurrence + explicit local feedback kernel logic |
-| `src/pirtm/simulations/riemann_verification.py` | `PrimeTensorSystem` | Legacy-backed research simulation | **Classify** as legacy/research until generator replacement exists |
+| `src/pirtm/simulations/qari_module.py` | *(none)* | Modernized simulation | Maintain on core-backed helper path |
+| `src/pirtm/simulations/quantum_feedback.py` | *(none)* | Modernized simulation | Maintain on core-backed helper path |
+| `src/pirtm/simulations/riemann_verification.py` | `PrimeTensorSystem` | Legacy-backed research simulation (isolated non-core) | Keep classified research-only until generator replacement exists |
 
 ## Legacy Usage Detail
 
@@ -38,6 +38,10 @@ Status:
 - Replace `recursive_update` calls with modern recurrence-oriented update paths.
 - Keep simulation-local feedback generation but route state transitions through supported APIs.
 
+Status:
+
+- Completed for `qari_module.py` and `quantum_feedback.py` via `pirtm.simulations.core_helpers`.
+
 ### Phase 3 — Prime tensor generator decision
 
 - Either:
@@ -48,14 +52,23 @@ Status:
 
 - **Legacy-classified/non-core (temporary):**
   - `riemann_verification.py` (research-oriented spectral interference simulation)
-- **Migration candidates for `R6` implementation:**
+- **Modernized off `_legacy`:**
   - `qari_module.py`
   - `quantum_feedback.py`
 
 ## Phase 1 Implementation Notes
 
 - All simulation modules now include explicit legacy-classification module headers.
-- Remaining legacy blockers are now concentrated on tensor generation/update and feedback helpers, not spectral analysis imports (except `quantum_feedback.py` plot-argument path).
+
+## Phase 2 Implementation Notes
+
+- Added `src/pirtm/simulations/core_helpers.py` as a core-backed helper module for:
+  - prime-indexed tensor bank generation
+  - norm-safe recurrence updates
+  - feedback helper replacement
+  - optional plotting-compatible spectral analysis wrapper
+- `qari_module.py` and `quantum_feedback.py` now run on core-backed simulation helpers with no `_legacy` imports.
+- `riemann_verification.py` remains explicitly isolated as research-only/non-core.
 
 ## Exit Criteria for R6 completion
 

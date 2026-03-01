@@ -33,3 +33,11 @@ Note: JSON CLI output is gated; add `--emit-witness` and/or `--emit-lambda-event
  - `example_peoh_proof.ipynb`
  - `example_qai_integration.ipynb`
 
+## Simulation Modernization Status (R6)
+
+- Modernized off `_legacy`:
+	- `src/pirtm/simulations/qari_module.py`
+	- `src/pirtm/simulations/quantum_feedback.py`
+- Research-only legacy-classified (non-core):
+	- `src/pirtm/simulations/riemann_verification.py`
+

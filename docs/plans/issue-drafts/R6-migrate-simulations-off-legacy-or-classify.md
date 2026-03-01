@@ -17,16 +17,16 @@ Simulation paths still coupled to legacy APIs create drift against the modern co
 ## Acceptance Criteria
 
 - [x] Inventory of simulation modules and import paths is documented.
-- [ ] Each simulation is either migrated to modern APIs or explicitly marked as legacy.
+- [x] Each simulation is either migrated to modern APIs or explicitly marked as legacy.
 - [x] Legacy-classified simulations are isolated and documented as non-core.
-- [ ] Modernized simulations run successfully with current package APIs.
+- [x] Modernized simulations run successfully with current package APIs.
 
 ## Implementation Checklist
 
 - [x] Audit `src/pirtm/simulations/*.py` legacy imports.
-- [ ] Replace with core APIs (`recurrence`, `qari`, `gate`, `certify`) where feasible.
+- [x] Replace with core APIs (`recurrence`, `qari`, `gate`, `certify`) where feasible.
 - [x] Add clear headers/docs for any simulation intentionally left legacy.
-- [ ] Update examples/docs references to modernized simulation entry points.
+- [x] Update examples/docs references to modernized simulation entry points.
 
 ## Progress Notes (2026-03-01)
 
@@ -41,7 +41,17 @@ Simulation paths still coupled to legacy APIs create drift against the modern co
 	- `riemann_verification.py` now uses `pirtm.spectral_decomp.analyze_tensor`.
 	- `quantum_feedback.py` retains legacy `analyze_tensor` temporarily due to `plot`-argument behavior mismatch.
 - Added explicit legacy-classification module headers in all simulation modules that still depend on `_legacy` APIs.
-- Next execution slice: replace remaining `_legacy` tensor/update helpers (`PrimeTensorSystem`, `recursive_update`, `feedback_operator`) or formally keep research-only modules classified legacy with non-core entry-point isolation.
+- Phase 2 executed:
+	- `qari_module.py` migrated off `_legacy` generator/update dependencies.
+	- `quantum_feedback.py` migrated off `_legacy` generator/update/feedback/spectral dependencies.
+	- `riemann_verification.py` kept explicitly research-only and legacy-classified (isolated non-core).
+	- Added shared core-backed helper module: `src/pirtm/simulations/core_helpers.py`.
+
+## Completion Notes (2026-03-01)
+
+- `qari_module.py` and `quantum_feedback.py` now have no `_legacy` imports.
+- `riemann_verification.py` remains the only `_legacy`-dependent simulation and is explicitly documented as isolated research-only/non-core.
+- Migration/classification matrix updated in `docs/plans/simulation_migration_map.md`.
 
 ## Out of Scope
 

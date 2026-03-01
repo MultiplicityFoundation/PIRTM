@@ -1,17 +1,17 @@
-"""Legacy-classified simulation module (R6).
+"""Modernized simulation module (R6).
 
-This simulation remains non-core because it still depends on legacy APIs:
-- `pirtm._legacy.PrimeTensorSystem`
-- `pirtm._legacy.recursive_update`
-- `pirtm._legacy.feedback_operator`
-- `pirtm._legacy.analyze_tensor` (retained in Phase 1 because this module
-    relies on the legacy `plot` argument behavior)
+This module has been migrated off `pirtm._legacy` generator/update/feedback
+dependencies and uses core-backed simulation helpers.
 """
 
 import numpy as np
-from pirtm._legacy import PrimeTensorSystem
-from pirtm._legacy import recursive_update, feedback_operator
-from pirtm._legacy import analyze_tensor
+
+from pirtm.simulations.core_helpers import (
+        PrimeTensorBank,
+        analyze_tensor_with_plot,
+        feedback_operator,
+        recursive_update,
+)
 
 class QuantumFeedbackSimulator:
     """
@@ -20,7 +20,7 @@ class QuantumFeedbackSimulator:
 
     def __init__(self, dim=4, num_primes=50, Lambda_m=0.9):
         self.Lambda_m = Lambda_m
-        self.pts = PrimeTensorSystem(dim=dim, num_primes=num_primes)
+        self.pts = PrimeTensorBank(dim=dim, num_primes=num_primes)
         self.Xi = self.pts.state
         self.history = [self.Xi.copy()]
         self.feedback_history = []
@@ -60,7 +60,7 @@ class QuantumFeedbackSimulator:
         """
         Perform spectral analysis on final state Ξ(T).
         """
-        return analyze_tensor(self.Xi, plot=plot)
+        return analyze_tensor_with_plot(self.Xi, plot=plot)
 
     def get_state_history(self):
         return self.history

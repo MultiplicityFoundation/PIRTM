@@ -1,18 +1,12 @@
-"""Legacy-classified simulation module (R6).
+"""Modernized simulation module (R6).
 
-This simulation remains non-core because it still depends on legacy tensor
-generation/update surfaces (`pirtm._legacy.PrimeTensorSystem`,
-`pirtm._legacy.recursive_update`).
-
-Phase 1 migration status:
-- migrated off legacy spectral analysis import to
-    `pirtm.spectral_decomp.analyze_tensor`.
+This module has been migrated off `pirtm._legacy` update/generator
+dependencies and now uses core-backed simulation helpers.
 """
 
 import numpy as np
-from pirtm._legacy import PrimeTensorSystem
-from pirtm._legacy import recursive_update
-from pirtm.spectral_decomp import analyze_tensor
+
+from pirtm.simulations.core_helpers import PrimeTensorBank, analyze_tensor, recursive_update
 
 class QARIEngine:
     """
@@ -23,7 +17,7 @@ class QARIEngine:
     def __init__(self, dim=6, Lambda_m=0.88, seed=None):
         self.dim = dim
         self.Lambda_m = Lambda_m
-        self.tensors = PrimeTensorSystem(dim=dim, num_primes=100, seed=seed)
+        self.tensors = PrimeTensorBank(dim=dim, num_primes=100, seed=seed)
         self.Xi = self.tensors.state
         self.prime_count = self.tensors.num_primes
         self.time = 0
