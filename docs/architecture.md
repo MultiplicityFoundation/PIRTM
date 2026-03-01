@@ -50,3 +50,19 @@ Dependency direction is mostly leafward toward `types`.
 ## Legacy Boundary
 
 Legacy modules are under `pirtm._legacy` with deprecation warning at import and compatibility-only scope.
+
+## Spectral API Boundary Decision (R4)
+
+Decision date: 2026-03-01
+
+- `pirtm.spectral_decomp` remains a **supported public API surface** for the `v0.1.x` line.
+- `pirtm.spectral_gov` remains a supported governance companion API.
+- Spectral utilities under `pirtm._legacy` are **deprecated transition surfaces** only.
+
+### Sunset Timeline
+
+- `v0.1.x`: top-level spectral APIs supported; `_legacy` remains available with deprecation warnings.
+- `v0.2.x`: deprecation messages become strict and include migration guidance.
+- `v0.3.0` target: remove deprecated `_legacy` spectral entry points that are superseded by supported top-level APIs.
+
+This boundary keeps public spectral usage stable while allowing controlled legacy retirement through `R5` and simulation migration work in `R6`.

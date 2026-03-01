@@ -50,7 +50,7 @@ print(info.q, cert.certified)
 - `pirtm.audit`: `AuditChain` for deterministic hash-chained trace export
 - `pirtm.qari`: `QARISession`, `QARIConfig` high-level adapter
 - `pirtm.csl` + `pirtm.csl_gate`: CSL operators and two-stage ethical emission gating
-- `pirtm.spectral_decomp` + `pirtm.spectral_gov`: spectral analysis and governance recommendations
+- `pirtm.spectral_decomp` + `pirtm.spectral_gov`: spectral analysis and governance recommendations (supported public spectral APIs for `v0.1.x`; legacy spectral paths in `pirtm._legacy` are deprecated)
 - `pirtm.orchestrator`: multi-session registration, pause snapshots, certificate aggregation
 - `pirtm.lambda_bridge`: Λ-trace translation + batch submission receipts
 - `pirtm.petc_bridge`: prime-indexed ordering allocator for session audit chains

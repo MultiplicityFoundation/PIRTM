@@ -41,10 +41,12 @@ All notable changes to this project are documented in this file.
 - Metadata parsing for transpiler CLI now fails with explicit object/JSON validation errors.
 - Core completion plan updated from historical bootstrap gaps to remaining-deltas roadmap execution.
 - Documentation expanded for transpiler hash/export behavior and CLI usage parity.
+- Spectral API boundary decision recorded: `pirtm.spectral_decomp` remains supported public API for `v0.1.x`; `_legacy` spectral paths remain transitional.
 
 ### Deprecated
 - `_legacy` surfaces remain deprecated; module-by-module sunset policy and target removal version are tracked in roadmap items `R4` and `R5`.
 - Legacy `Certificate` compatibility path is deprecated in favor of ACE-native certificate typing; see migration notes (`docs/migration/certify-v1.md`).
+- `_legacy` spectral entry points are targeted for sunset in `v0.3.0` (with stricter migration messaging in `v0.2.x`).
 
 ### Fixed
 - CLI tests now assert and protect explicit output-gating behavior for witness and Lambda event payloads.

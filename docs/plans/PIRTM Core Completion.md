@@ -99,6 +99,11 @@ Scope fidelity vs. release velocity: a conservative freeze delays `R2`, `R3`, an
 
 Current state: legacy code is present under `src/pirtm/_legacy/` with package-level deprecation warning, while `src/pirtm/spectral_decomp.py` also exists as a top-level module.
 
+**Boundary decision (2026-03-01)**
+- `pirtm.spectral_decomp` is the supported public spectral API for `v0.1.x`.
+- `_legacy` spectral surfaces remain deprecated transition-only paths.
+- Sunset target for deprecated `_legacy` spectral surfaces: `v0.3.0` (subject to `R5`/`R6` migration completion).
+
 **Deliverables**
 - Decide and document canonical spectral API boundary:
 	- keep `pirtm.spectral_decomp` as supported, or
