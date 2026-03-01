@@ -1,10 +1,18 @@
-# 📦 qari_module.py
-# Tensor Evolution Module for Quantum Calculator with PIRTM-Driven QARI
+"""Legacy-classified simulation module (R6).
+
+This simulation remains non-core because it still depends on legacy tensor
+generation/update surfaces (`pirtm._legacy.PrimeTensorSystem`,
+`pirtm._legacy.recursive_update`).
+
+Phase 1 migration status:
+- migrated off legacy spectral analysis import to
+    `pirtm.spectral_decomp.analyze_tensor`.
+"""
 
 import numpy as np
 from pirtm._legacy import PrimeTensorSystem
 from pirtm._legacy import recursive_update
-from pirtm._legacy import analyze_tensor
+from pirtm.spectral_decomp import analyze_tensor
 
 class QARIEngine:
     """

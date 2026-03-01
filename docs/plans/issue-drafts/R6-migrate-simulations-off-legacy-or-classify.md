@@ -18,14 +18,14 @@ Simulation paths still coupled to legacy APIs create drift against the modern co
 
 - [x] Inventory of simulation modules and import paths is documented.
 - [ ] Each simulation is either migrated to modern APIs or explicitly marked as legacy.
-- [ ] Legacy-classified simulations are isolated and documented as non-core.
+- [x] Legacy-classified simulations are isolated and documented as non-core.
 - [ ] Modernized simulations run successfully with current package APIs.
 
 ## Implementation Checklist
 
 - [x] Audit `src/pirtm/simulations/*.py` legacy imports.
 - [ ] Replace with core APIs (`recurrence`, `qari`, `gate`, `certify`) where feasible.
-- [ ] Add clear headers/docs for any simulation intentionally left legacy.
+- [x] Add clear headers/docs for any simulation intentionally left legacy.
 - [ ] Update examples/docs references to modernized simulation entry points.
 
 ## Progress Notes (2026-03-01)
@@ -36,7 +36,12 @@ Simulation paths still coupled to legacy APIs create drift against the modern co
 	- `qari_module.py`: legacy-backed, migration candidate.
 	- `quantum_feedback.py`: legacy-backed, migration candidate.
 	- `riemann_verification.py`: legacy-backed, currently best classified as research/non-core until generator replacement is approved.
-- Next execution slice: implement Phase 1 replacements (`analyze_tensor` to supported spectral API) and add explicit module classification headers where legacy remains.
+- Phase 1 executed:
+	- `qari_module.py` now uses `pirtm.spectral_decomp.analyze_tensor`.
+	- `riemann_verification.py` now uses `pirtm.spectral_decomp.analyze_tensor`.
+	- `quantum_feedback.py` retains legacy `analyze_tensor` temporarily due to `plot`-argument behavior mismatch.
+- Added explicit legacy-classification module headers in all simulation modules that still depend on `_legacy` APIs.
+- Next execution slice: replace remaining `_legacy` tensor/update helpers (`PrimeTensorSystem`, `recursive_update`, `feedback_operator`) or formally keep research-only modules classified legacy with non-core entry-point isolation.
 
 ## Out of Scope
 

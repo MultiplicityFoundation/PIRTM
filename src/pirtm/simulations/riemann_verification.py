@@ -1,11 +1,18 @@
-# 📦 riemann_verification.py
-# Simulating Prime Eigenvalue Interference for PEOH Validation
+"""Legacy-classified research simulation module (R6).
+
+This module remains non-core because it still depends on
+`pirtm._legacy.PrimeTensorSystem` for prime-indexed tensor generation.
+
+Phase 1 migration status:
+- migrated off legacy spectral analysis import to
+    `pirtm.spectral_decomp.analyze_tensor`.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
 from sympy import primerange
-from pirtm._legacy import analyze_tensor
 from pirtm._legacy import PrimeTensorSystem
+from pirtm.spectral_decomp import analyze_tensor
 
 def generate_superposition(prime_tensor_sys, num_terms=50):
     """

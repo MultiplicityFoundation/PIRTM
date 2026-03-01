@@ -1,5 +1,12 @@
-# 📦 quantum_feedback.py
-# Quantum Dynamic Feedback Simulation with PIRTM
+"""Legacy-classified simulation module (R6).
+
+This simulation remains non-core because it still depends on legacy APIs:
+- `pirtm._legacy.PrimeTensorSystem`
+- `pirtm._legacy.recursive_update`
+- `pirtm._legacy.feedback_operator`
+- `pirtm._legacy.analyze_tensor` (retained in Phase 1 because this module
+    relies on the legacy `plot` argument behavior)
+"""
 
 import numpy as np
 from pirtm._legacy import PrimeTensorSystem
