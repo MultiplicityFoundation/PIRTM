@@ -42,7 +42,11 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.10",
 ]
-all = ["pirtm[legacy,dev]"]
+release = [
+    "build>=1.2",
+    "twine>=5.0",
+]
+all = ["pirtm[legacy,dev,release]"]
 
 [project.urls]
 Homepage = "https://github.com/MultiplicityFoundation/PIRTM"

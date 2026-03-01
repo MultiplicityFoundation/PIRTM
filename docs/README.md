@@ -1,5 +1,6 @@
 ## Documentation Index
 
+- Requirements matrix: `docs/requirements.md`
 - Active roadmap: `docs/plans/PIRTM Core Completion.md`
 - Plans status and support matrix: `docs/plans/README.md`
 - Release checklist and gate matrix: `docs/release_checklist.md`

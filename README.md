@@ -173,6 +173,7 @@ print("petc_bridge:", tagged[0], ordering)
 ## Documentation
 
 - Docs index: `docs/README.md`
+- Requirements matrix: `docs/requirements.md`
 - Active roadmap: `docs/plans/PIRTM Core Completion.md`
 - Plans status + support matrix: `docs/plans/README.md`
 - API reference: `docs/api/README.md`
