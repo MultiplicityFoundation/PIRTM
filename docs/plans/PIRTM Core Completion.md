@@ -182,6 +182,17 @@ Completion of `R1`–`R10` yields a release-ready PIRTM core with:
 - stable CI release gates, and
 - one current roadmap reflecting implemented reality.
 
+## Current Support Matrix (Roadmap Sync)
+
+| Subsystem | Status | Stability | Reference |
+|---|---|---|---|
+| PIRTM core (recurrence/certify/petc/gate) | Active | Stable for `v0.1.0` scope | `README.md`, `tests/`, CI required gates |
+| ACE surfaces (`pirtm.ace.*`) | Active | Experimental-to-stabilizing | `src/pirtm/ace/`, critical-suites CI job |
+| Transpiler surfaces (`pirtm.transpiler.*`) | Active | Stabilizing | `docs/plans/PIRTM Transpiler Spec.md`, CLI tests |
+| Legacy surfaces (`pirtm._legacy`) | Active (deprecated) | Transitional | Boundary/sunset tracked in `R4` and `R5` |
+
+Canonical status map and historical labeling are maintained in `docs/plans/README.md`.
+
 ## Historical Baseline
 
 The original Tier 1–5 checklist is retained in git history and was superseded by this remaining-deltas roadmap after substantial completion of packaging, CI, core modules, tests, and onboarding docs.
