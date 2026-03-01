@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import Iterable, Sequence
+import warnings
+from typing import Sequence
 
-import numpy as np
-
+from .ace.levels import certify_l0
+from .ace.protocol import to_legacy_certificate
+from .ace.types import AceCertificate
 from .types import Certificate, StepInfo
 
 
@@ -13,36 +15,55 @@ def _ensure_sequence(info: StepInfo | Sequence[StepInfo]) -> list[StepInfo]:
     return list(info)
 
 
+def ace_certificate_v2(
+    info: StepInfo | Sequence[StepInfo],
+    *,
+    tail_norm: float = 0.0,
+) -> AceCertificate:
+    """Deprecated ACE-native alias.
+
+    Use :func:`ace_certificate`.
+    Returns :class:`pirtm.ace.types.AceCertificate`.
+    """
+
+    warnings.warn(
+        "ace_certificate_v2() is deprecated; use ace_certificate()",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return ace_certificate(info, tail_norm=tail_norm)
+
+
 def ace_certificate(
     info: StepInfo | Sequence[StepInfo],
     *,
     tail_norm: float = 0.0,
-) -> Certificate:
-    """Elementary ACE-style certificate from per-step telemetry."""
+) -> AceCertificate:
+    """Default ACE certificate path.
+
+    Returns :class:`pirtm.ace.types.AceCertificate`.
+    """
 
     records = _ensure_sequence(info)
     if not records:
         raise ValueError("no telemetry provided")
+    return certify_l0(records, tail_norm=tail_norm, delta=0.0)
 
-    target = 1.0 - min(r.epsilon for r in records)
-    max_q = max(r.q for r in records)
-    margin = target - max_q
-    certified = margin >= 0
-    if max_q >= 1.0:
-        tail_bound = float("inf")
-    else:
-        tail_bound = tail_norm / max(1e-12, 1.0 - max_q)
 
-    return Certificate(
-        certified=certified,
-        margin=margin,
-        tail_bound=tail_bound,
-        details={
-            "max_q": max_q,
-            "target": target,
-            "steps": len(records),
-        },
+def legacy_ace_certificate(
+    info: StepInfo | Sequence[StepInfo],
+    *,
+    tail_norm: float = 0.0,
+) -> Certificate:
+    """Deprecated alias for the legacy certificate path."""
+
+    warnings.warn(
+        "legacy_ace_certificate() is deprecated; use ace_certificate()",
+        DeprecationWarning,
+        stacklevel=2,
     )
+    ace_cert = ace_certificate(info, tail_norm=tail_norm)
+    return to_legacy_certificate(ace_cert)
 
 
 def iss_bound(

@@ -175,7 +175,7 @@ print("petc_bridge:", tagged[0], ordering)
 - API reference: `docs/api/README.md`
 - Architecture guide: `docs/architecture.md`
 - Mathematical spec: `docs/math_spec.md`
-- Examples index: `examples/README.md`
+- Examples index: `examples/README.md` (includes transpiler descriptor usage and `--emit-witness` / `--emit-lambda-events` JSON output gating notes)
 
 ## Development
 
@@ -235,6 +235,20 @@ python -m pirtm.cli transpile \
 	--dim 3 \
 	--emission-policy pass_through \
 	--output json
+```
+
+Default JSON output omits `witness_json` and `lambda_events`. Include them explicitly when needed:
+
+```bash
+python -m pirtm transpile \
+	--type computation \
+	--input examples/transpile_computation.json \
+	--prime-index 7919 \
+	--identity-commitment 0xabc123 \
+	--dim 3 \
+	--output json \
+	--emit-witness \
+	--emit-lambda-events
 ```
 
 Hash controls for witness export:

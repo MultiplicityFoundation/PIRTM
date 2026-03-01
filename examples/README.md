@@ -23,6 +23,8 @@
  - `examples/transpile_computation.json`
  - `examples/transpile_two_layer_nn.json`
 
+Note: JSON CLI output is gated; add `--emit-witness` and/or `--emit-lambda-events` to include those fields.
+
  ## Legacy Notebooks
 
  The legacy exploratory notebooks remain for reference:

@@ -6,11 +6,12 @@ from typing import Callable
 import numpy as np
 
 from .adaptive import AdaptiveMargin
+from .ace.types import AceCertificate
 from .audit import AuditChain
 from .certify import ace_certificate
 from .gate import EmissionGate, EmissionPolicy, GatedOutput
 from .telemetry import TelemetryBus
-from .types import Certificate, StepInfo
+from .types import StepInfo
 
 
 @dataclass
@@ -88,7 +89,7 @@ class QARISession:
         self._step_count += 1
         return result
 
-    def certify(self, tail_norm: float = 0.0) -> Certificate:
+    def certify(self, tail_norm: float = 0.0) -> AceCertificate:
         if not self._infos:
             raise ValueError("No steps recorded. Call step() first.")
         cert = ace_certificate(self._infos, tail_norm=tail_norm)

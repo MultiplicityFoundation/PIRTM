@@ -4,6 +4,7 @@ import hashlib
 import json
 from dataclasses import asdict, dataclass
 
+from .ace.types import AceCertificate
 from .types import Certificate, StepInfo
 
 
@@ -35,7 +36,7 @@ class AuditChain:
         }
         return self._append(payload)
 
-    def append_certificate(self, cert: Certificate) -> AuditEvent:
+    def append_certificate(self, cert: Certificate | AceCertificate) -> AuditEvent:
         payload = {
             "type": "certificate",
             "certified": bool(cert.certified),

@@ -27,6 +27,7 @@ def test_cli_transpile_computation_json_output(tmp_path, capsys):
             "3",
             "--emission-policy",
             "pass_through",
+            "--emit-witness",
             "--output",
             "json",
         ]
@@ -37,7 +38,66 @@ def test_cli_transpile_computation_json_output(tmp_path, capsys):
     payload = json.loads(stdout)
     assert payload["spec"]["input_type"] == "computation"
     assert payload["witness_json"]["pathType"] == "computation"
+    assert "lambda_events" not in payload
     assert payload["certificate"]["details"]["steps"] == 5
+
+
+def test_cli_transpile_json_default_omits_witness_and_lambda_events(tmp_path, capsys):
+    computation_file = tmp_path / "computation_default_gating.json"
+    computation_file.write_text('{"mode":"gradient_descent","steps":3}', encoding="utf-8")
+
+    code = main(
+        [
+            "transpile",
+            "--type",
+            "computation",
+            "--input",
+            str(computation_file),
+            "--prime-index",
+            "7919",
+            "--identity-commitment",
+            "0xabc123",
+            "--dim",
+            "3",
+            "--output",
+            "json",
+        ]
+    )
+
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert "witness_json" not in payload
+    assert "lambda_events" not in payload
+
+
+def test_cli_transpile_emit_lambda_events_includes_events(tmp_path, capsys):
+    computation_file = tmp_path / "computation_emit_lambda.json"
+    computation_file.write_text('{"mode":"gradient_descent","steps":3}', encoding="utf-8")
+
+    code = main(
+        [
+            "transpile",
+            "--type",
+            "computation",
+            "--input",
+            str(computation_file),
+            "--prime-index",
+            "7919",
+            "--identity-commitment",
+            "0xabc123",
+            "--dim",
+            "3",
+            "--emit-lambda-events",
+            "--output",
+            "json",
+        ]
+    )
+
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert "witness_json" not in payload
+    assert "lambda_events" in payload
+    assert isinstance(payload["lambda_events"], list)
 
 
 def test_cli_transpile_summary_to_file(tmp_path):
@@ -180,6 +240,7 @@ def test_cli_transpile_hash_scheme_poseidon(tmp_path, capsys):
             "3",
             "--hash-scheme",
             "poseidon_compat",
+            "--emit-witness",
             "--output",
             "json",
         ]
@@ -213,6 +274,7 @@ def test_cli_transpile_dual_hash_override(tmp_path, capsys):
             "--hash-scheme",
             "sha256",
             "--dual-hash",
+            "--emit-witness",
             "--output",
             "json",
         ]
@@ -223,3 +285,47 @@ def test_cli_transpile_dual_hash_override(tmp_path, capsys):
     witness = payload["witness_json"]
     assert witness["hashSchemes"] == ["sha256", "poseidon_compat"]
     assert "stateHashPoseidon" in witness
+
+
+def test_cli_transpile_invalid_metadata_json_rejected(tmp_path):
+    computation_file = tmp_path / "computation_invalid_metadata.json"
+    computation_file.write_text('{"mode":"gradient_descent","steps":3}', encoding="utf-8")
+
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "transpile",
+                "--type",
+                "computation",
+                "--input",
+                str(computation_file),
+                "--prime-index",
+                "7919",
+                "--identity-commitment",
+                "0xabc123",
+                "--metadata",
+                "{invalid",
+            ]
+        )
+
+
+def test_cli_transpile_non_object_metadata_rejected(tmp_path):
+    computation_file = tmp_path / "computation_non_object_metadata.json"
+    computation_file.write_text('{"mode":"gradient_descent","steps":3}', encoding="utf-8")
+
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "transpile",
+                "--type",
+                "computation",
+                "--input",
+                str(computation_file),
+                "--prime-index",
+                "7919",
+                "--identity-commitment",
+                "0xabc123",
+                "--metadata",
+                "[]",
+            ]
+        )

@@ -292,16 +292,27 @@ The critical hash migration: `AuditChain` currently uses SHA-256 internally, and
 
 ```
 pirtm transpile \
-  --input model.pt \
+   --input model.json \
   --type computation \
   --prime-index 7919 \
   --identity-commitment 0xabc123... \
    --hash-scheme dual \
    --dual-hash \
   --epsilon 0.05 \
+   --output json
+```
+
+Default JSON output excludes `witness_json` and `lambda_events`. Opt in explicitly:
+
+```
+pirtm transpile \
+   --input model.json \
+   --type computation \
+   --prime-index 7919 \
+   --identity-commitment 0xabc123... \
+   --output json \
   --emit-witness \
-  --emit-lambda-events \
-  --output result.json
+   --emit-lambda-events
 ```
 
 The CLI wraps `conformance._cli_main()`'s pattern but routes through the transpiler instead of the core profile checker. `--hash-scheme` accepts `sha256`, `poseidon_compat`, or `dual`, and `--dual-hash` forces both hash families to be emitted.
