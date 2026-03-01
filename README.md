@@ -176,6 +176,8 @@ print("petc_bridge:", tagged[0], ordering)
 - Architecture guide: `docs/architecture.md`
 - Mathematical spec: `docs/math_spec.md`
 - Examples index: `examples/README.md` (includes transpiler descriptor usage and `--emit-witness` / `--emit-lambda-events` JSON output gating notes)
+- Release notes: `CHANGELOG.md` (`v0.1.0` draft section)
+- Migration notes: `docs/migration/v0.1.0.md` and `docs/migration/certify-v1.md`
 
 ## Development
 

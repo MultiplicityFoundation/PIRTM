@@ -28,6 +28,71 @@ Current state: package version remains development (`0.1.0dev0`) and `CHANGELOG.
 
 **Dependencies**: none.
 
+## Release Scope: v0.1.0 (Scope Lock Draft)
+
+**Decision date**: 2026-02-28  
+**Approver**: Lead Multiplicity Theorist (final sign-off pending name record)
+
+### Central Tension
+
+Scope fidelity vs. release velocity: a conservative freeze delays `R2`, `R3`, and `R8`; an aggressive freeze risks shipping an unvetted contract that weakens L0 invariant guarantees or expands legal surface area.
+
+### Precision Decision
+
+`v0.1.0` is treated as a **public-facing semantic-version contract** for the explicitly in-scope surfaces below (not just an internal coordination tag). This means in-scope API/behavior is freeze-controlled and requires explicit approver sign-off.
+
+### Levers
+
+| Lever | Owner | Metric | Horizon |
+|---|---|---|---|
+| Scope lock decision published | Lead Multiplicity Theorist | PR merged to this file | 7 days |
+| Blocker list with owners | Track A lead | All blockers have owner + resolution criteria | 7 days |
+| Go/No-Go criteria ratified | All track leads | Criteria approved asynchronously or in sync | 14 days |
+| `CHANGELOG.md` unreleased scope note populated | Track A implementation owner | Section present and reviewed before tag | 30 days |
+
+### In Scope (Proposed for `v0.1.0`)
+
+| Area | In-Scope Surface |
+|---|---|
+| Core Library (mirror-dissonance) | Stable public API surface for phase dissonance detection (types and entrypoints) |
+| Core Library (mirror-dissonance) | L0 invariant enforcement path fails loudly on violation |
+| Core Library (mirror-dissonance) | Basic test coverage with pass/fail CI gate |
+| PIRTM Core | Core modules sufficient for reference use case demonstration |
+| PIRTM Core | This plan document updated to runtime-truth state |
+| Governance / Compliance | `LICENSE` present and correct |
+| Governance / Compliance | `CHANGELOG.md` promoted with release scope note, date, and approver |
+
+### Out of Scope (Deferred)
+
+| Item | Rationale |
+|---|---|
+| MCP / agent integrations | Avoid freezing agent API before core stabilizes |
+| UI surfaces | No direct dependency in `R1`-`R8` |
+| Terraform / cloud resources | Post-release concern unless CI requires it |
+| Q-Calculator and Lambda-Proof integrations | Cross-repo coupling should not block PIRTM core release |
+| Published package registry artifacts | Explicitly excluded by `R1` issue scope |
+
+### Release Blockers (Track A)
+
+| Blocker | Owner | Resolution Criteria |
+|---|---|---|
+| Scope and tag finalization (`v0.1.0` or alternative) | Lead Multiplicity Theorist | Scope section finalized and approved |
+| Release notes + migration notes (`R2`) | Track A lead | Draft merged and linked from README/docs |
+| Release gate matrix (`R8`) | CI/quality owner | Required checks documented and accepted |
+
+### Go / No-Go Criteria (Draft)
+
+- All in-scope modules pass required CI on mainline.
+- No open `release-blocker` issue without owner and target resolution date.
+- L0 invariants are enforced and covered by tests.
+- `CHANGELOG.md` and this plan reflect the same frozen scope.
+- Precision decision above is explicitly recorded in writing.
+- Lead Multiplicity Theorist signs off.
+
+### Downstream Links
+
+`R1` unblocks: `R2`, `R3`, `R8`.
+
 ---
 
 ### Delta B — Legacy Boundary Completion
