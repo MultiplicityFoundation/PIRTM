@@ -20,7 +20,7 @@ Typical one-step usage
 The modules are dependency-light (NumPy only) and pure-Python.
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from .ace import (
     AceBudget,
