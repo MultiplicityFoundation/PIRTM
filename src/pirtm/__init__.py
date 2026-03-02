@@ -12,15 +12,15 @@ This package provides the *drop-in* components that Q-ARI's core loop calls:
 Typical one-step usage
 ----------------------
 >>> from pirtm.recurrence import step
->>> from pirtm.certify import ace_certificate
+>>> from pirtm.certify import contraction_certificate
 >>> x1, info = step(x0, Xi_t, Lam_t, T, g_t, P, epsilon=0.05, op_norm_T=1.0)
->>> cert = ace_certificate(info)
+>>> cert = contraction_certificate(info)
 >>> assert cert.certified
 
 The modules are dependency-light (NumPy only) and pure-Python.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .ace import (
     AceBudget,
@@ -33,7 +33,13 @@ from .ace import (
 )
 from .adaptive import AdaptiveMargin
 from .audit import AuditChain, AuditEvent
-from .certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
+from .certify import (
+    ace_certificate,
+    ace_certificate_v2,
+    contraction_certificate,
+    iss_bound,
+    legacy_ace_certificate,
+)
 from .csc import compute_margin, multi_step_margin, sensitivity, solve_budget
 from .csl import (
     CSLVerdict,
@@ -116,6 +122,7 @@ __all__ = [
     "project_parameters_soft",
     "project_parameters_weighted_l1",
     # certificates / bounds
+    "contraction_certificate",
     "ace_certificate",
     "ace_certificate_v2",
     "legacy_ace_certificate",

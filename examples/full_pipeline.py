@@ -17,8 +17,13 @@ from pirtm import (
 def main() -> None:
     dim = 4
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-    T = lambda x: 0.8 * x
-    P = lambda x: x
+
+    def T(x: np.ndarray) -> np.ndarray:
+        return 0.8 * x
+
+    def P(x: np.ndarray) -> np.ndarray:
+        return x
+
     x0 = np.ones(dim)
 
     op_norm, _ = estimate_operator_norm(T, dim=dim)

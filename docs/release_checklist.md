@@ -73,6 +73,31 @@ This matrix defines which checks are required for a release-candidate commit on 
 - Result: `403 Resource not accessible by integration` with current token scope.
 - Action required: repository maintainer/admin must confirm in GitHub branch protection settings that the CI jobs listed above are marked as required checks on `Multiplicity`.
 
+## PR-C Release-Readiness Snapshot (2026-03-02)
+
+### Day 13–14 Gate Run (local evidence)
+
+- Conformance directory: `python -m pytest -q tests/conformance/` -> pass (`17 passed`)
+- Full test suite: `python -m pytest -q` -> pass (`207 passed, 4 warnings`)
+- Type-check: `python -m mypy` -> pass (`no issues found in 64 source files`)
+- Lint: `python -m ruff check .` -> pass (`All checks passed`)
+- Conformance profile CLI: `pirtm-conformance --profile all --output text` -> pass (core + integrity)
+
+### Warning snapshot
+
+- Remaining warnings are deprecation warnings from `pirtm._legacy` import paths.
+- No warnings were raised from newly added conformance/doc-sprint modules.
+
+### Release-readiness status summary
+
+| Gate | Status | Evidence |
+|---|---|---|
+| §5/§8/§9/§11 conformance tests | PASS | `tests/conformance/` (17 passing) |
+| Full pytest suite | PASS | `207 passed` |
+| Static typing | PASS | `mypy` clean |
+| Lint | PASS | `ruff` clean |
+| Conformance profile command | PASS | `pirtm-conformance --profile all` |
+
 ## Pre-release
 
 - [ ] Ensure release branch is up to date with `Multiplicity`

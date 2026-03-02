@@ -54,6 +54,21 @@ def ace_certificate(
     return certify_l0(records, tail_norm=tail_norm, delta=0.0)
 
 
+def contraction_certificate(
+    info: StepInfo | Sequence[StepInfo],
+    *,
+    tail_norm: float = 0.0,
+) -> Certificate:
+    """Primary certificate API for contraction validation.
+
+    Returns the stable :class:`pirtm.types.Certificate` bundle for callers that
+    only need certified/margin/tail-bound diagnostics.
+    """
+
+    ace_cert = ace_certificate(info, tail_norm=tail_norm)
+    return to_legacy_certificate(ace_cert)
+
+
 def legacy_ace_certificate(
     info: StepInfo | Sequence[StepInfo],
     *,
@@ -62,12 +77,11 @@ def legacy_ace_certificate(
     """Deprecated alias for the legacy certificate path."""
 
     warnings.warn(
-        "legacy_ace_certificate() is deprecated; use ace_certificate()",
+        "legacy_ace_certificate() is deprecated; use contraction_certificate()",
         DeprecationWarning,
         stacklevel=2,
     )
-    ace_cert = ace_certificate(info, tail_norm=tail_norm)
-    return to_legacy_certificate(ace_cert)
+    return contraction_certificate(info, tail_norm=tail_norm)
 
 
 def iss_bound(

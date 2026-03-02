@@ -8,9 +8,14 @@ def main() -> None:
     x0 = np.ones(dim)
     xi = 0.3 * np.eye(dim)
     lam = 0.2 * np.eye(dim)
-    T = lambda x: 0.8 * x
+
+    def T(x: np.ndarray) -> np.ndarray:
+        return 0.8 * x
+
     g = np.zeros(dim)
-    P = lambda x: x
+
+    def P(x: np.ndarray) -> np.ndarray:
+        return x
 
     x1, info = step(x0, xi, lam, T, g, P, epsilon=0.05, op_norm_T=0.8)
     cert = ace_certificate(info)

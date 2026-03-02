@@ -42,8 +42,13 @@ Projects vector onto weighted `\ell_1` ball and returns `(projection, tau)`.
 
 ## Certificates (`pirtm.certify`)
 
+Detailed page: `docs/api/certify.md`
+
+### `contraction_certificate(info, *, tail_norm=0.0)`
+Primary compatibility API returning `Certificate` (`certified`, `margin`, `tail_bound`, `details`).
+
 ### `ace_certificate(info, *, tail_norm=0.0)`
-Builds certificate with `margin = target - max_q`.
+Builds ACE-native certificate (`AceCertificate`) with `margin = target - max_q`.
 
 ### `iss_bound(info, disturbance_norm)`
 Returns disturbance bound `d/(1-max_q)` when stable, else `inf`.
@@ -57,6 +62,16 @@ Returns disturbance bound `d/(1-max_q)` when stable, else `inf`.
 
 ### `petc_invariants(primes, min_length=3)`
 Backward-compatible shim around ledger validation with mass-violation guard.
+
+### `compute_coverage(chain, a, b)`
+Computes PETC coverage ratio `ρ(C,[a,b])`.
+
+### `validate_petc_chain(chain, *, max_gap=100, min_coverage=0.8, coverage_window=1000)`
+Returns explicit invariant diagnostics (`valid`, gap/coverage checks, violations list).
+
+### CLI (`pirtm petc`)
+- `pirtm petc coverage --chain path/to/chain.json --range a-b`
+- `pirtm petc validate --chain path/to/chain.json --max-gap 100 --min-coverage 0.8`
 
 ## Weights (`pirtm.weights`)
 

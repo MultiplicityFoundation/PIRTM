@@ -22,7 +22,7 @@ with safety projection (`q_t < 1 - epsilon`), ACE certificates, ISS bounds, PETC
 
 ```python
 import numpy as np
-from pirtm import step, ace_certificate
+from pirtm import step, contraction_certificate
 
 x = np.ones(4)
 xi = 0.3 * np.eye(4)
@@ -32,16 +32,16 @@ G = np.zeros(4)
 P = lambda v: v
 
 x_next, info = step(x, xi, lam, T, G, P, epsilon=0.05, op_norm_T=0.8)
-cert = ace_certificate(info)
-print(info.q, cert.certified)
+cert = contraction_certificate(info)
+print(f"certified={cert.certified}, margin={cert.margin:.4f}")
 ```
 
 ## Modules
 
 - `pirtm.recurrence`: `step`, `run`
 - `pirtm.projection`: soft / weighted-`\ell_1` projection
-- `pirtm.certify`: `ace_certificate`, `iss_bound`
-- `pirtm.petc`: `PETCLedger`, `petc_invariants`
+- `pirtm.certify`: `contraction_certificate`, `ace_certificate`, `iss_bound`
+- `pirtm.petc`: `PETCLedger`, `petc_invariants`, `compute_coverage`, `validate_petc_chain`
 - `pirtm.weights`: `synthesize_weights`, `validate_schedule`
 - `pirtm.gain`: `estimate_operator_norm`, `build_gain_sequence`, `check_iss_compatibility`
 - `pirtm.csc`: `solve_budget`, `compute_margin`, `multi_step_margin`, `sensitivity`
@@ -183,7 +183,7 @@ print("petc_bridge:", tagged[0], ordering)
 - Examples index: `examples/README.md` (includes transpiler descriptor usage and `--emit-witness` / `--emit-lambda-events` JSON output gating notes)
 - Test guide: `tests/README.md`
 - Release notes: `CHANGELOG.md` (`v0.1.0` section)
-- Migration notes: `docs/migration/v0.1.0.md` and `docs/migration/certify-v1.md`
+- Migration notes: `docs/migration/v0.1.0.md`, `docs/migration/v0.1.1.md`, and `docs/migration/certify-v1.md`
 
 ## Release Scope (`v0.1.0`)
 
@@ -206,6 +206,20 @@ python -m pytest -q
 
 ```bash
 pirtm-conformance --profile all --output text
+```
+
+## PETC CLI
+
+Compute PETC coverage over a prime range:
+
+```bash
+pirtm petc coverage --chain path/to/chain.json --range 2-200
+```
+
+Validate PETC chain invariants:
+
+```bash
+pirtm petc validate --chain path/to/chain.json --max-gap 100 --min-coverage 0.8
 ```
 
 ## Transpiler CLI (Phase 2.1)

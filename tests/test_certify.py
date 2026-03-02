@@ -1,8 +1,14 @@
 import pytest
 
 from pirtm.ace.types import AceCertificate
-from pirtm.certify import ace_certificate, ace_certificate_v2, iss_bound, legacy_ace_certificate
-from pirtm.types import StepInfo
+from pirtm.certify import (
+    ace_certificate,
+    ace_certificate_v2,
+    contraction_certificate,
+    iss_bound,
+    legacy_ace_certificate,
+)
+from pirtm.types import Certificate, StepInfo
 
 
 def test_ace_single_step_certified(safe_step_info):
@@ -57,11 +63,25 @@ def test_ace_certificate_v2_returns_ace_certificate():
 
 def test_legacy_alias_emits_deprecation():
     info = StepInfo(step=0, q=0.7, epsilon=0.05, nXi=0.4, nLam=0.3, projected=False, residual=0.001)
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(DeprecationWarning, match="contraction_certificate"):
         cert = legacy_ace_certificate([info])
-    from pirtm.types import Certificate
-
     assert isinstance(cert, Certificate)
+
+
+def test_contraction_certificate_returns_legacy_certificate():
+    info = StepInfo(step=0, q=0.7, epsilon=0.05, nXi=0.4, nLam=0.3, projected=False, residual=0.001)
+    cert = contraction_certificate([info])
+    assert isinstance(cert, Certificate)
+
+
+def test_contraction_certificate_matches_legacy_alias(safe_step_info):
+    cert = contraction_certificate([safe_step_info])
+    with pytest.warns(DeprecationWarning):
+        legacy = legacy_ace_certificate([safe_step_info])
+
+    assert cert.certified == legacy.certified
+    assert cert.margin == legacy.margin
+    assert cert.tail_bound == legacy.tail_bound
 
 
 def test_ace_certificate_details_preserve_legacy_keys(safe_step_info):

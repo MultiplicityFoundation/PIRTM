@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pirtm"
-version = "0.1.0"
+version = "0.1.1"
 description = "Prime-Indexed Recursive Tensor Mathematics — certified contractive core"
 readme = "README.md"
 license = "MIT"
@@ -64,6 +64,7 @@ addopts = "-ra --strict-markers"
 target-version = "py311"
 line-length = 100
 src = ["src"]
+extend-exclude = ["examples/*.ipynb", "notebooks/*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "TCH"]

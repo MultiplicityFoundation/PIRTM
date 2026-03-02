@@ -189,7 +189,28 @@ The safety condition $q < 1-\epsilon$ ensures strict contraction on $\mathbb{R}^
 
 ---
 
-## §5 ACE Certificate
+## §5 Certificate Types
+
+### §5.1 Minimal Certificate
+
+The minimal contraction certificate is:
+
+$$
+	ext{Certificate}_{\min}=\{certified\in\mathbb{B}\}
+$$
+
+### §5.2 Standard Certificate
+
+The standard implementation certificate is:
+
+$$
+	ext{Certificate}=\{certified,\ margin,\ tail\_bound,\ details\}
+$$
+
+where `details` carries implementation diagnostics (for example `max_q`,
+`target`, and step metadata).
+
+### §5.3 ACE Certificate
 
 The **Absolute Contraction Evidence (ACE) certificate** for an expression $E$
 is the record:
@@ -210,6 +231,14 @@ tail\_bound=\begin{cases}
 \infty, & \text{otherwise}
 \end{cases}
 $$
+
+### §5.4 API Mapping
+
+| Python API | Returns | Use Case |
+| :-- | :-- | :-- |
+| `contraction_certificate(info)` | `Certificate` | Standard contraction validation |
+| `ace_certificate(info)` | `AceCertificate` | ACE diagnostics |
+| `iss_bound(info, disturbance_norm)` | `float` | ISS bound |
 
 ---
 
@@ -357,7 +386,7 @@ Violation of any L0 invariant renders the expression ill-typed.
 
 | Class | Requirements |
 | :-- | :-- |
-| **Core** | §2 grammar, §3 type system, §5 ACE certificate, L0.1 |
+| **Core** | §2 grammar, §3 type system, §5 certificate types, L0.1 |
 | **Ordered** | Core + §7 PETC chain, L0.2, L0.3 |
 | **Gated** | Ordered + §8 emission gate, L0.4 |
 | **Witnessed** | Gated + §9 witness language, L0.5, L0.6 |

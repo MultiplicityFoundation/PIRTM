@@ -27,6 +27,68 @@ def _prime_count(lo: int, hi: int) -> int:
     return sum(1 for value in range(max(2, lo), hi + 1) if _is_prime(value))
 
 
+def compute_coverage(
+    chain: list[int] | tuple[int, ...],
+    a: int,
+    b: int,
+) -> float:
+    """Compute PETC coverage ratio ρ(C,[a,b])."""
+
+    lo = int(min(a, b))
+    hi = int(max(a, b))
+    denominator = _prime_count(lo, hi)
+    if denominator == 0:
+        return 0.0
+    chain_set = {int(value) for value in chain}
+    covered = sum(1 for value in range(max(2, lo), hi + 1) if _is_prime(value) and value in chain_set)
+    return covered / denominator
+
+
+def validate_petc_chain(
+    chain: list[int] | tuple[int, ...],
+    *,
+    max_gap: int = 100,
+    min_coverage: float = 0.8,
+    coverage_window: int = 1000,
+) -> dict[str, bool | float | int | list[str]]:
+    """Validate PETC chain invariants and report diagnostics."""
+
+    primes = [int(value) for value in chain]
+    primality_ok = all(_is_prime(value) for value in primes)
+    monotone_ok = all(a < b for a, b in zip(primes, primes[1:], strict=False))
+    gaps = [b - a for a, b in zip(primes, primes[1:], strict=False)]
+    max_gap_found = max(gaps) if gaps else 0
+    gap_ok = max_gap_found <= max_gap
+
+    if primes:
+        start = primes[0]
+        end = min(primes[-1], start + int(coverage_window))
+        coverage = compute_coverage(primes, start, end)
+    else:
+        coverage = 0.0
+
+    violations: list[str] = []
+    if not primality_ok:
+        violations.append("Non-prime found in chain")
+    if not monotone_ok:
+        violations.append("Chain not strictly monotone")
+    if not gap_ok:
+        violations.append(f"Gap {max_gap_found} exceeds max {max_gap}")
+    if coverage < min_coverage:
+        violations.append(f"Coverage {coverage:.4f} below minimum {min_coverage:.4f}")
+
+    valid = primality_ok and monotone_ok and gap_ok and coverage >= min_coverage
+    return {
+        "valid": valid,
+        "primality_ok": primality_ok,
+        "monotone_ok": monotone_ok,
+        "gap_ok": gap_ok,
+        "max_gap_found": max_gap_found,
+        "coverage": coverage,
+        "violations": violations,
+    }
+
+
 class PETCLedger:
     """Append-only prime-indexed event-triggered chain."""
 
@@ -58,13 +120,8 @@ class PETCLedger:
         return len(self._entries)
 
     def coverage(self, lo: int, hi: int) -> float:
-        lo_i = int(lo)
-        hi_i = int(hi)
-        denominator = _prime_count(lo_i, hi_i)
-        if denominator == 0:
-            return 0.0
-        present = {entry.prime for entry in self._entries if lo_i <= entry.prime <= hi_i}
-        return len(present) / denominator
+        values = [entry.prime for entry in self._entries]
+        return compute_coverage(values, int(lo), int(hi))
 
     def validate(self) -> PETCReport:
         primes = [entry.prime for entry in self._entries]

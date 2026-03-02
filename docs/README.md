@@ -10,5 +10,7 @@
 - PIRTM Language Specification (Normative): `docs/PIRTM_LANGUAGE_SPEC.md`
 - PIRTM Mathematical Specification (Implementation Reference): `docs/math_spec.md`
 - API reference: `docs/api/README.md`
+- Certificate API details: `docs/api/certify.md`
+- Conformance guide: `docs/conformance.md`
 
 

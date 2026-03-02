@@ -16,6 +16,15 @@
  python examples/full_pipeline.py
  ```
 
+## Certificate API Usage
+
+Run an end-to-end certificate demo (primary certificate path, ACE diagnostics,
+and ISS bound):
+
+```bash
+python examples/certificate_usage.py
+```
+
  ## Transpiler Descriptor
 
  Use this computation descriptor with the Phase 2.1 transpiler CLI examples:

@@ -5,16 +5,22 @@ All notable changes to this project are documented in this file.
 ## [Unreleased]
 
 ### Added
-- Placeholder for post-`v0.1.0` development entries.
+- New primary certificate API: `contraction_certificate(info, *, tail_norm=0.0)` returning `Certificate` for standard contraction validation.
+- PETC helper APIs: `compute_coverage(chain, a, b)` and `validate_petc_chain(...)` with explicit invariant diagnostics.
+- New `pirtm petc` CLI commands: `coverage` and `validate` for JSON chain analysis.
+- Migration guide for certificate API clarification: `docs/migration/v0.1.1.md`.
 
 ### Changed
-- Placeholder for post-`v0.1.0` development entries.
+- Top-level exports/docs now position `contraction_certificate()` as the recommended default path; `ace_certificate()` remains for ACE-native diagnostics.
+- Language spec §5 now distinguishes standard certificate usage from ACE diagnostics and includes explicit API mapping.
+- Ruff configuration now excludes notebook paths (`examples/*.ipynb`, `notebooks/*.ipynb`) from repository lint gating.
 
 ### Deprecated
-- Placeholder for post-`v0.1.0` development entries.
+- `legacy_ace_certificate()` deprecation guidance now points to `contraction_certificate()`.
 
 ### Fixed
-- Placeholder for post-`v0.1.0` development entries.
+- CLI typing/lint regressions introduced during PETC CLI integration were resolved (`mypy` clean).
+- Example scripts and tooling import/style issues were cleaned up to restore full lint pass.
 
 ## [0.1.0] - 2026-03-01
 
