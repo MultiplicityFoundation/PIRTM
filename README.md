@@ -1,6 +1,42 @@
 # PIRTM — Prime-Indexed Recursive Tensor Mathematics
 
-Contractive recurrence engine with certified convergence.
+**PIRTM** is a computation language and certified runtime for recursive tensor mathematics. It is a foundational component of [Multiplicity Theory](https://github.com/MultiplicityFoundation) and the [ΛProof](https://github.com/MultiplicityFoundation) open foundation — a framework for building verifiable, ethically governed, and provably stable dynamic systems.
+
+Every well-formed PIRTM program carries four guarantees that distinguish it from conventional numerical libraries:
+
+1. **Contractive typing** — every expression includes a proof that the recurrence contracts by at least $\epsilon > 0$; unbounded divergence is impossible by construction.
+2. **Prime-indexed ordering** — every computation step is assigned a prime number as its audit-chain position, giving a total, gap-bounded, tamper-evident ordering over all events.
+3. **Emission predication** — output is not produced by execution alone; it is produced only when a language-level gate predicate (including ethical CSL checks) is satisfied.
+4. **Witness commitment** — every emitted output binds *(state hash × prime index × contraction certificate)* into a single commitment that can be verified without re-executing the computation.
+
+These properties make PIRTM suitable as the safety-critical inner loop for AI inference engines, certified control systems, and any computation that must be auditable after the fact.
+
+## Purpose and Design Principles
+
+Classical numerical frameworks give you correctness by convention — the caller is responsible for stability and safety. PIRTM inverts this: **safety is enforced by the type system and runtime, not by caller discipline**.
+
+- **Certified stability**: every step projects gain matrices so the contraction coefficient `q_t < 1 − ε` holds invariantly. No configuration can produce unbounded growth.
+- **Auditable execution**: the `AuditChain` attaches a prime index and cryptographic hash to every step, producing a Merkle-verifiable trace that travels with the computation.
+- **Ethical emission gating**: the Conscious Sovereignty Layer (CSL) operators — Neutrality, Beneficence, Silence, and Commutation — evaluate each step against ethical predicates before output is released. Failing steps default to NO-OP with a logged audit event.
+- **Composable governance**: `SpectralGovernor` derives safety parameters from the operator `T` itself; `SessionOrchestrator` federates multiple sessions; `LambdaTraceBridge` submits audit chains to the ΛProof on-chain system.
+
+## Open Foundation
+
+PIRTM's mathematical core — including the contractive recurrence, PETC prime ordering, CSL operators, and contraction safety certificates — is part of the **Constitutional Core** irrevocably dedicated to the public domain by the [ΛProof Open Mathematical Foundation Pledge](PATENT%20PLEDGE.md). Anyone may implement, extend, or build commercial products on these foundations without license or royalty obligation.
+
+## Current Release: `v0.1.0` (2026-03-01)
+
+| Subsystem | Status | Stability |
+|---|---|---|
+| Core recurrence / certification (`recurrence`, `certify`, `projection`) | Active | **Stable** |
+| Planning / validation (`petc`, `weights`, `gain`, `csc`) | Active | **Stable** |
+| Runtime governance (`gate`, `telemetry`, `audit`, `qari`) | Active | **Stable** |
+| Protocol integration (`csl`, `csl_gate`, `spectral_gov`, `orchestrator`, `lambda_bridge`, `petc_bridge`) | Active | **Stable** |
+| ACE package (`pirtm.ace.*`) | Active | Experimental → stabilizing |
+| Transpiler (`pirtm.transpiler.*`) | Active | Stabilizing |
+| Legacy surfaces (`pirtm._legacy`) | Active | **Deprecated** — sunset in `v0.3.0` |
+
+Repository directories `frontend/`, `notebooks/`, and `papers/` are outside the `v0.1.0` package scope and are not covered by the public API contract.
 
 ## What It Does
 
@@ -189,7 +225,8 @@ print("petc_bridge:", tagged[0], ordering)
 
 - The `v0.1.0` package scope and stability contract apply to the Python library under `src/pirtm` and documented CLI surfaces.
 - Repository directories `frontend/`, `notebooks/`, and `papers/` are out of package release scope for `v0.1.0` and are not covered by the `pirtm` public API contract.
-- Legacy internals under `pirtm._legacy` remain transitional/deprecated and are excluded from stable API guarantees.
+- Legacy internals under `pirtm._legacy` remain transitional/deprecated and are excluded from stable API guarantees. Sunset target: `v0.3.0`.
+- The stability matrix above (under "Current Release") is the canonical support contract for `v0.1.0`.
 
 ## Development
 
@@ -368,4 +405,4 @@ make reproduce    # emit SHA256 manifest for reproducibility
 
 ## License
 
-MIT (code).
+MIT (code). The mathematical foundations — contractive recurrence, PETC prime ordering, CSL operators, and contraction safety certificates — are part of the Constitutional Core dedicated to the public domain. See [PATENT PLEDGE.md](PATENT%20PLEDGE.md) for the full ΛProof Open Mathematical Foundation Pledge.
