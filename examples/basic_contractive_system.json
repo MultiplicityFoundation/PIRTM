@@ -1,0 +1,14 @@
+{
+  "name": "basic_contractive_system",
+  "description": "Simple contractive linear system with single module",
+  "spec_reference": "ADR-004: Single-module PIRTM with contractivity check",
+  "components": [
+    {
+      "name": "linear_recurrence",
+      "prime_index": 7919,
+      "epsilon": 0.05,
+      "op_norm_T": 0.9,
+      "description": "Basic linear recurrence with operator norm < 1"
+    }
+  ]
+}

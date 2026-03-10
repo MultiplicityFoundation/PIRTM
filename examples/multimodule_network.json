@@ -1,0 +1,21 @@
+{
+  "name": "multimodule_network",
+  "description": "Two-module network with coprime primes (demonstrating L0 invariant #1)",
+  "spec_reference": "ADR-004 L0 invariant #1: modules must be coprime (gcd=1)",
+  "components": [
+    {
+      "name": "module_A",
+      "prime_index": 7919,
+      "epsilon": 0.12,
+      "op_norm_T": 0.75,
+      "description": "First module with prime 7919"
+    },
+    {
+      "name": "module_B",
+      "prime_index": 8191,
+      "epsilon": 0.08,
+      "op_norm_T": 0.85,
+      "description": "Second module with prime 8191 (coprime to 7919)"
+    }
+  ]
+}

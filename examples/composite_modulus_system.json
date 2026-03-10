@@ -1,0 +1,14 @@
+{
+  "name": "composite_modulus_system",
+  "description": "Session graph with squarefree composite modulus (product of distinct primes)",
+  "spec_reference": "ADR-004 L0 invariant #5: composite session_graph.mod must be squarefree",
+  "components": [
+    {
+      "name": "composite_session",
+      "prime_index": 30,
+      "epsilon": 0.10,
+      "op_norm_T": 0.6,
+      "description": "Composite modulus 30 = 2*3*5 (squarefree, all μ(30)≠0)"
+    }
+  ]
+}

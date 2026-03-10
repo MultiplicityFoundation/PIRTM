@@ -1,0 +1,21 @@
+{
+  "name": "tightly_coupled_system",
+  "description": "Network of modules with significant coupling (tests spectral radius computation)",
+  "spec_reference": "ADR-008: Link-time spectral-small-gain test (Day 14+)",
+  "components": [
+    {
+      "name": "coupled_module_1",
+      "prime_index": 11,
+      "epsilon": 0.20,
+      "op_norm_T": 0.5,
+      "description": "First tightly-coupled module"
+    },
+    {
+      "name": "coupled_module_2",
+      "prime_index": 13,
+      "epsilon": 0.15,
+      "op_norm_T": 0.6,
+      "description": "Second tightly-coupled module (gcd(11,13)=1, coprime)"
+    }
+  ]
+}

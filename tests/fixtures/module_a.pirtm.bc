@@ -1,0 +1,23 @@
+{
+  "format": "pirtm.bc",
+  "version": "1.0",
+  "timestamp": "2026-03-10T01:57:26.466639+00:00",
+  "content": {
+    "modules": [
+      {
+        "name": "module_a",
+        "prime_index": 13,
+        "epsilon": 0.02,
+        "op_norm_T": 0.85,
+        "contractivity_check": "PASS",
+        "proof_hash": "7e8fc201aead01a781bea66573e3c943deb844e2ccb96cde4298abd46002736d",
+        "timestamp": "2026-03-10T01:57:26.466616+00:00"
+      }
+    ],
+    "coupling": "#pirtm.unresolved_coupling",
+    "mlir_source": "!pirtm.module(mod=13, epsilon=0.02, op_norm_T=0.85)",
+    "audit_trail": [
+      "Created fixture: module_a"
+    ]
+  }
+}
