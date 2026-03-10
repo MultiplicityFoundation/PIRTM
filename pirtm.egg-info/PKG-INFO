@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: pirtm
+Version: 0.4.1
+Summary: Prime-Indexed Recursive Tensor Mathematics
+Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: numpy>=1.24
+Dynamic: license-file
