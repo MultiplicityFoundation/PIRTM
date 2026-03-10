@@ -161,14 +161,17 @@ class PirtmExecutor:
             X_t = np.array(initial_state, dtype=np.float64)
         
         # Get gain matrix from policy
-        _ = policy.compute_gain_matrix(kernel)  # Lambda_t unused in placeholder implementation
-        
-        # Run recurrence
+        Lambda_t = policy.compute_gain_matrix(kernel)
+
+        # Identity operator for Xi_t
+        Xi_t = np.eye(state_dim)
+
+        # Run recurrence using pirtm.core.recurrence.step
+        from .recurrence import step as recurrence_step
         trajectory = [X_t.copy()]
         for _ in range(steps):
-            # TODO: Implement actual recurrence loop using pirtm.core.recurrence.step
-            # X_t = step(X_t, Xi_t=np.eye(state_dim), Lambda_t=Lambda_t, ...)
-            trajectory.append(X_t.copy())  # Placeholder - doesn't actually compute
+            X_t, _ = recurrence_step(X_t, Xi_t, Lambda_t)
+            trajectory.append(X_t.copy())
         
         return {
             'state': X_t,

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule, RouterLink],
   template: `
     <div class="flex flex-col min-h-screen bg-[#050505] text-zinc-100 selection:bg-emerald-500/30">
       
@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
           <div class="space-y-8">
             <div class="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-medium text-emerald-400">
               <span class="flex h-2 w-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-              v1.0.0 Stable Release
+              v0.4.1 — Phase 2 MLIR
             </div>
             
             <h1 class="text-4xl font-extrabold tracking-tight lg:text-6xl text-white">
@@ -160,7 +160,7 @@ import { MatIconModule } from '@angular/material/icon';
               <span class="font-mono text-2xl font-bold text-cyan-500">02</span>
             </div>
             <h3 class="text-xl font-bold text-white mb-3">Run Recurrence</h3>
-            <p class="text-zinc-400 text-sm max-w-xs">pirtm.run() auto-projects parameters to maintain contraction and records telemetry per step.</p>
+            <p class="text-zinc-400 text-sm max-w-xs">pirtm.step() projects state after each iteration to maintain contraction and records per-step telemetry.</p>
           </div>
 
           <div class="relative flex flex-col items-center text-center">
@@ -168,7 +168,7 @@ import { MatIconModule } from '@angular/material/icon';
               <span class="font-mono text-2xl font-bold text-purple-500">03</span>
             </div>
             <h3 class="text-xl font-bold text-white mb-3">Certify Results</h3>
-            <p class="text-zinc-400 text-sm max-w-xs">ace_certificate() produces a Certificate with margin, tail bound, and convergence status.</p>
+            <p class="text-zinc-400 text-sm max-w-xs">certify_state() produces a ContractivityCertificate with margin, state norm, and convergence status.</p>
           </div>
         </div>
       </section>
@@ -208,52 +208,61 @@ import { MatIconModule } from '@angular/material/icon';
               </div>
 
               <div class="p-6 overflow-x-auto">
-                <pre class="font-mono text-sm leading-relaxed" *ngIf="activeTab === 'quickstart'"><code class="text-zinc-300"><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
-<span class="text-purple-400">from</span> pirtm <span class="text-purple-400">import</span> step, ace_certificate
+                @if (activeTab === 'quickstart') {
+                <pre class="font-mono text-sm leading-relaxed"><code class="text-zinc-300"><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
+<span class="text-purple-400">from</span> pirtm <span class="text-purple-400">import</span> step, certify_state
 
-<span class="text-zinc-500"># Initialize State and Parameters</span>
+<span class="text-zinc-500"># Initialize State and Operators</span>
 X = np.zeros(4)
+Xi = 0.3 * np.eye(4)   <span class="text-zinc-500"># State projection operator</span>
+Lam = 0.2 * np.eye(4)  <span class="text-zinc-500"># Aggregation operator</span>
+G = np.random.randn(4) * 0.01
+
+<span class="text-zinc-500"># Run a single contractive step</span>
+X_next, info = step(X, Xi, Lam, G_t=G)
+
+<span class="text-zinc-500"># Generate Contractivity Certificate</span>
+cert = certify_state(X_next, epsilon=0.05)
+
+print(<span class="text-emerald-300">f"||X||={{ '{' }}info['norm_X_next']:.4f{{ '}' }}, valid={{ '{' }}cert.is_valid(){{ '}' }}, margin={{ '{' }}cert.contraction_margin():.4f{{ '}' }}"</span>)</code></pre>
+                }
+                @if (activeTab === 'adaptive') {
+                <pre class="font-mono text-sm leading-relaxed"><code class="text-zinc-300"><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
+<span class="text-purple-400">from</span> pirtm <span class="text-purple-400">import</span> step, certify_state, verify_trajectory
+
 Xi = 0.3 * np.eye(4)
 Lam = 0.2 * np.eye(4)
-T = <span class="text-purple-400">lambda</span> x: np.tanh(x)
-G = np.random.randn(4) * 0.01
-P = <span class="text-purple-400">lambda</span> x: np.clip(x, -1, 1)
-
-<span class="text-zinc-500"># Run a single step with epsilon constraint</span>
-X_next, info = step(X, Xi, Lam, T, G, P, epsilon=0.05)
-
-<span class="text-zinc-500"># Generate Audit Certificate</span>
-cert = ace_certificate(info, tail_norm=0.01)
-
-print(<span class="text-emerald-300">f"q={{ '{' }}info.q:.4f{{ '}' }}, certified={{ '{' }}cert.certified{{ '}' }}, margin={{ '{' }}cert.margin:.4f{{ '}' }}"</span>)</code></pre>
-
-                <pre class="font-mono text-sm leading-relaxed" *ngIf="activeTab === 'adaptive'"><code class="text-zinc-300"><span class="text-purple-400">from</span> pirtm <span class="text-purple-400">import</span> AdaptiveMargin, Monitor
-
-<span class="text-zinc-500"># Initialize Adaptive Margin Controller</span>
-am = AdaptiveMargin(initial_epsilon=0.1, decay=0.99)
-monitor = Monitor()
+X = np.zeros(4)
+trajectory = [X.copy()]
 
 <span class="text-purple-400">for</span> t <span class="text-purple-400">in</span> range(100):
-    <span class="text-zinc-500"># Auto-tune epsilon based on residual history</span>
-    eps = am.update(monitor.history)
-    
-    X_next, info = step(X, Xi, Lam, T, G, P, epsilon=eps)
-    monitor.record(t, info)
-    
-    <span class="text-purple-400">if</span> not info.contractive:
-        am.intervene()
-        break</code></pre>
+    X, info = step(X, Xi, Lam)
+    trajectory.append(X.copy())
 
-                <pre class="font-mono text-sm leading-relaxed" *ngIf="activeTab === 'spectral'"><code class="text-zinc-300"><span class="text-purple-400">from</span> pirtm.spectral <span class="text-purple-400">import</span> decompose, coherence
+    cert = certify_state(X, epsilon=0.05)
+    <span class="text-purple-400">if</span> not cert.is_valid():
+        print(<span class="text-emerald-300">f"Step {{ '{' }}t{{ '}' }}: invariant violated at ||X||={{ '{' }}cert.state_norm:.4f{{ '}' }}"</span>)
+        <span class="text-purple-400">break</span>
 
-<span class="text-zinc-500"># Perform Prime-Indexed Spectral Decomposition</span>
-eigenvals, eigenvecs = decompose(operator=T, index_basis=<span class="text-emerald-300">'prime'</span>)
+result = verify_trajectory(trajectory, epsilon=0.05)
+print(<span class="text-emerald-300">f"all_valid={{ '{' }}result['all_valid']{{ '}' }}, margin={{ '{' }}result['max_margin']:.4f{{ '}' }}"</span>)</code></pre>
+                }
+                @if (activeTab === 'spectral') {
+                <pre class="font-mono text-sm leading-relaxed"><code class="text-zinc-300"><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np
+<span class="text-purple-400">from</span> pirtm <span class="text-purple-400">import</span> compute_spectral_radius, verify_gain_contraction
 
-<span class="text-zinc-500"># Check Phase Coherence</span>
-phase_lock = coherence(eigenvecs, reference_state=X)
+<span class="text-zinc-500"># Build aggregation operator</span>
+Lambda = 0.2 * np.eye(4)
 
-print(<span class="text-emerald-300">f"Spectral Entropy: {{ '{' }}np.sum(np.abs(eigenvals)):.4f{{ '}' }}"</span>)
-print(<span class="text-emerald-300">f"Phase Lock: {{ '{' }}phase_lock:.2f{{ '}' }}"</span>)</code></pre>
+<span class="text-zinc-500"># Compute spectral radius</span>
+r = compute_spectral_radius(Lambda)
+
+<span class="text-zinc-500"># Verify contractivity bound: r(Λ) &lt; 1 - ε</span>
+ok, radius = verify_gain_contraction(Lambda, epsilon=0.05)
+
+print(<span class="text-emerald-300">f"Spectral Radius: {{ '{' }}r:.4f{{ '}' }}"</span>)
+print(<span class="text-emerald-300">f"Contractive: {{ '{' }}ok{{ '}' }} (r={{ '{' }}radius:.4f{{ '}' }})"</span>)</code></pre>
+                }
               </div>
             </div>
           </div>
