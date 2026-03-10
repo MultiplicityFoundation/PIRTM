@@ -37,16 +37,18 @@ import { MatIconModule } from '@angular/material/icon';
             </div>
             <div class="flex-1 p-4 font-mono text-sm text-zinc-300 overflow-auto">
               <pre><code>import numpy as np
-from pirtm import step
+from pirtm import step, certify_state
 
-# Initialize
+# Initialize operators
 X = np.zeros(4)
-Xi = 0.3 * np.eye(4)
+Xi = 0.3 * np.eye(4)   # State projection
+Lam = 0.2 * np.eye(4)  # Aggregation
 
 print("Starting recurrence...")
 for i in range(10):
-    X, info = step(X, Xi, epsilon=0.05)
-    print(f"Step {{ '{' }}i{{ '}' }}: q={{ '{' }}info.q:.4f{{ '}' }}")</code></pre>
+    X, info = step(X, Xi, Lam)
+    cert = certify_state(X, epsilon=0.05)
+    print(f"Step {{ '{' }}i{{ '}' }}: ||X||={{ '{' }}info['norm_X_next']:.4f{{ '}' }}, valid={{ '{' }}cert.is_valid(){{ '}' }}")</code></pre>
             </div>
           </div>
 

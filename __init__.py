@@ -33,10 +33,29 @@ from . import core
 # Phase 2: MLIR transpiler integration
 from . import transpiler
 
+# Top-level convenience exports so `from pirtm import step` works
+from .core.recurrence import step, iterate
+from .core.certify import certify_state, verify_trajectory, ContractivityCertificate
+from .core.projection import project, project_ball
+from .core.gain import compute_spectral_radius, verify_gain_contraction
+
 __all__ = [
     "backend",
     "core",
     "transpiler",
+    # Recurrence
+    "step",
+    "iterate",
+    # Certification
+    "certify_state",
+    "verify_trajectory",
+    "ContractivityCertificate",
+    # Projection
+    "project",
+    "project_ball",
+    # Gain / spectral
+    "compute_spectral_radius",
+    "verify_gain_contraction",
 ]
 
 

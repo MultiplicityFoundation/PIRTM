@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pirtm"
+version = "0.4.1"
+description = "Prime-Indexed Recursive Tensor Mathematics — contractive recurrence runtime with compile-time MLIR dialect"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["mathematics", "tensor", "recurrence", "mlir", "contractivity"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+spectral = ["pandas>=1.5"]
+dev = ["pytest>=7", "numpy>=1.24"]
+
+[project.scripts]
+pirtm = "pirtm.transpiler.cli:main"
+
+[tool.setuptools]
+packages = [
+    "pirtm",
+    "pirtm.backend",
+    "pirtm.bindings",
+    "pirtm.channels",
+    "pirtm.core",
+    "pirtm.dialect",
+    "pirtm.integrations",
+    "pirtm.mlir",
+    "pirtm.spectral",
+    "pirtm.transpiler",
+    "pirtm.tools",
+    "pirtm.type_inference",
+]
+
+[tool.setuptools.package-dir]
+"pirtm" = "."
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
