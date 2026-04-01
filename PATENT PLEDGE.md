@@ -1,8 +1,8 @@
-# ΛProof Open Mathematical Foundation Pledge
+# Citizen Gardens Open Mathematical Foundation Pledge
 
 ## 1. Public Domain Dedication
 
-ΛProof irrevocably dedicates to the public domain the following 
+Citizen Gardens irrevocably dedicates to the public domain the following 
 foundational elements (the "Constitutional Core"):
 
 ### Mathematical Frameworks
@@ -10,8 +10,6 @@ foundational elements (the "Constitutional Core"):
 - Prime-Indexed Recursive Tensor Mathematics (PIRTM)
 - Prime-Encoded Tensor Calculus (PETC)
 - Dynamic Recursive Meta-Mathematics (DRMM)
-- Prime-Weighed Compensatory Fuzzy Logic (PW-CFL)
-- Certified Computational Refinement Engine (CCRE)
 - Polymorphic Multiplicity Density Matrices (PMDM)
 - Contraction Safety Certificates (CSC)
   
@@ -32,7 +30,7 @@ foundational elements (the "Constitutional Core"):
 
 ## 2. Reference Implementation License
 
-All reference implementations published in the ΛProof GitHub organization
+All reference implementations published in the Citizen Gardens GitHub organization
 are licensed under Apache License 2.0, which includes an express patent
 grant for code covered by that license.
 
@@ -42,27 +40,27 @@ Any person or entity may:
 - Implement tools, applications, or services using the Constitutional Core
 - Patent their own implementations, workflows, and applications
 - Commercialize their implementations without license or royalty
-- Create proprietary, closed-source tools on top of ΛProof
+- Create proprietary, closed-source tools on top of Citizen Gardens
 
 **This guarantee is irrevocable and survives any subsequent assignment
-or licensing of ΛProof-related intellectual property.**
+or licensing of Citizen Gardens-related intellectual property.**
 
 ## 4. No Enclosure Covenant
 
-ΛProof (and the ΛProof Foundation, upon formation) covenants that it will:
+Citizen Gardens (and the Citizen Gardens Foundation, upon formation) covenants that it will:
 
 (a) Never patent the Constitutional Core or seek to enforce any patents
     against implementations of the Constitutional Core;
 
-(b) Require any assignees or licensees of ΛProof-developed technology to
+(b) Require any assignees or licensees of Citizen Gardens-developed technology to
     honor this pledge as a condition of transfer;
 
-(c) Not assert patents against third parties who build tools on ΛProof,
-    even if those tools compete with ΛProof-developed services.
+(c) Not assert patents against third parties who build tools on Citizen Gardens,
+    even if those tools compete with Citizen Gardens-developed services.
 
 ## 5. Interface-Layer Defensive Publications
 
-ΛProof will proactively publish defensive disclosures of common integration
+Citizen Gardens will proactively publish defensive disclosures of common integration
 patterns, API schemas, and tool interfaces to establish prior art and prevent
 third-party enclosure of standard integration methods.
 
@@ -71,7 +69,7 @@ novel implementations or workflows.
 
 ## 6. Scope of Third-Party Freedom
 
-Third parties building on ΛProof are explicitly granted freedom to:
+Third parties building on Citizen Gardens are explicitly granted freedom to:
 
 | Activity | Permitted | Example |
 |----------|-----------|---------|
@@ -79,10 +77,10 @@ Third parties building on ΛProof are explicitly granted freedom to:
 | Patent novel applications | ✓ YES | Supply chain verification using prime-gated proofs |
 | Patent hardware implementations | ✓ YES | ASIC for accelerating Poseidon hashing |
 | Patent optimized algorithms | ✓ YES | Faster witness generation for specific circuits |
-| Patent integration methods | ✓ YES | Novel method for integrating ΛProof with legacy EHR |
-| Keep implementations closed-source | ✓ YES | Proprietary SaaS built on public ΛProof specs |
+| Patent integration methods | ✓ YES | Novel method for integrating Citizen Gardens with legacy EHR |
+| Keep implementations closed-source | ✓ YES | Proprietary SaaS built on public Citizen Gardens specs |
 | Patent the Constitutional Core itself | ✗ NO | MTPI, CSL, PIRTM remain unpatentable by anyone |
-| Prevent others from using ΛProof | ✗ NO | Cannot use ΛProof to create exclusive control |
+| Prevent others from using Citizen Gardens | ✗ NO | Cannot use Citizen Gardens to create exclusive control |
 
 ## 7. Defensive Termination (Limited Scope)
 
@@ -96,4 +94,5 @@ This pledge's non-assertion covenant terminates ONLY if a third party:
 
 Third-party patent assertions against other third parties' tools do NOT
 trigger termination, preserving normal patent dynamics for innovations.
+
 
